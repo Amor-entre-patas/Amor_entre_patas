@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro | Amor entre patas</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./CSS/TelaCadastroCSS.css">
+</head>
+
+<body>
+
+    <div class="conteiner">
+        <img class="foto" src="https://i.pinimg.com/736x/cf/ae/7e/cfae7ee56f31b4ccf549665a04d628cd.jpg"
+            alt="Foto cachorro">
+    </div>
+
+
+    <div class="topo">
+        <div class="abas">
+            <div class="bt_cadastro">
+                <a href="./TelaCadastro.htmls">Cadastro</a>
+            </div>
+
+            <div class="bt_login">
+                <a class="abas" href="./TelaLogin.html">Login</a>
+            </div>
+        </div>
+
+        <div class="bt_voltar">
+            <a href="./TelaCadastro.htmls">Voltar</a>
+        </div>
+    </div>
+
+    <h2>Se interessou pelo projeto? <br>
+        venha fazer parte disso tambem!</h2>
+
+    <span style="color: #df7a9c;">
+        <h2>Cadastre-se</h2>
+    </span> <br>
+
+
+    <div class="conteiner">
+        <div class="formulario">
+
+            <div class="campo-cpf">
+            <div class="rotulo-cpf"> Cpf:</div>
+            <input class="campos" placeholder="Insira seu cpf" id="ipt_cpf" onkeyup="validarCpf()"> <br>
+            </div> <br>
+           
+
+            <div class="campo">
+            <div class="rotulo">E-mail:</div>
+            <input class="campos" placeholder="Insira seu e-mail" id="ipt_email">
+            </div>
+
+            <div class="campo">
+           <div class="rotulo"> Código de validação:</div>
+            <input class="campos" placeholder="Insira o código de validação" id="ipt_CodigoValidacao"> <br>
+            </div>
+
+            <div class="campo">
+            <div class="rotulo"> Senha:</div>
+            <input class="campos" placeholder="Insira sua senha" type="password" id="ipt_senha">
+            </div>
+
+            <div class="campo">
+          <div class="rotulo">  Confirmar senha:</div>
+            <input class="campos" placeholder="Confirme sua senha"  type="password" id="ipt_ConfirmacaoSenha"> <br>
+        </div>
+
+
+        <div class="btn-finalizar" onclick="cadastrar()"><a href="#">Cadastrar</a></div>
+
+
+        <div id="div_exibir"></div>
+    </div>
+</body>
+<script>
+    let cpfValido = false;
+
+    function validarCpf() {
+
+        let tudoCerto = true;
+        let campos = [ipt_cpf, ipt_email, ipt_CodigoValidacao, ipt_senha, ipt_ConfirmacaoSenha];
+
+        for (let i = 0; i < campos.length; i++) {
+
+            if (campos[i].value == '') {
+                div_exibir.innerHTML = 'Preencha todos os campos!';
+                campos[i].style.borderColor = '#E03131';
+                tudoCerto = false;
+            } else {
+                campos[i].style.borderColor = '';
+            }
+        }
+
+
+        if (ipt_cpf.value.length != 11) {
+            div_exibir.innerHTML = 'CPF inválido. Ele precisa ter 11 números.';
+            ipt_cpf.style.borderColor = '#E03131';
+            cpfValido = false;
+            tudoCerto = false;
+        } else {
+            cpfValido = true;
+        }
+
+
+        if (ipt_senha.value.length < 8) {
+            div_exibir.innerHTML = 'Senha fraca. A senha precisa ter pelo menos 8 caracteres.';
+            ipt_senha.style.borderColor = '#E03131';
+            tudoCerto = false;
+        }
+
+
+        if (ipt_ConfirmacaoSenha.value != ipt_senha.value) {
+            div_exibir.innerHTML = 'As senhas não são iguais!';
+            ipt_ConfirmacaoSenha.style.borderColor = '#E03131';
+            tudoCerto = false;
+        }
+
+        if (tudoCerto) {
+            div_exibir.innerHTML = '';
+            alert('Cadastro enviado!');
+        }
+    }
+</script>
+
+</html>
