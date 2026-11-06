@@ -1,0 +1,177 @@
+@font-face {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 100 900;
+    src: url(https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap);
+}
+
+@font-face {
+    font-family: "Fraunces";
+    font-style: normal;
+    font-weight: 100 900;
+    src: url(https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&display=swap);
+}
+
+* {
+    background-color: #f6efe4;
+    
+}
+
+h2 {
+    text-align: center;
+    font-family: "Fraunces", sans-serif;
+    font-weight: 100px;
+    font-size: x-large;
+    margin-left: 15%;
+
+}
+
+.bt_voltar {
+    background-color: #e4a0b7;
+     width: 4%;
+    height: 2vh;
+    padding: 10px;
+    border-radius: 20px;
+    margin: 10px;
+    text-align: center;
+    display: inline;
+    margin-left: 50%;
+    
+
+}
+
+.bt_cadastro {
+    background-color: #e4a0b7;
+    width: 30%;
+    height: 3vh;
+    padding: 7px;
+    border-radius: 20px;
+    margin: 10px;
+    text-align: center;
+    display: inline;
+    margin-bottom: 10%;
+}
+
+.bt_login {
+    background-color: #f6efe4;
+    width: 30%;
+    height: 1vh;
+    padding: 10px;
+    border-radius: 20px;
+    border: 2px solid #e4a0b7;
+    margin: 10px;
+    text-align: center;
+    display: inline;
+    margin-bottom: 20%;
+}
+
+.bt_login a {
+    font-family: "DM Sans" sans-serif;
+    color: black;
+    background-color: #f6efe4;
+}
+
+a {
+    font-family: "DM Sans" sans-serif;
+    color: black;
+    background-color: #e4a0b7;
+    text-decoration: none;
+}
+
+.foto {
+    position: absolute;
+    top: 1%;
+    left: 0.5%;
+    width: 25%;
+    height: 97%;
+    object-fit: cover;
+    border-radius: 20px;
+    
+}
+
+.conteiner {
+    flex-direction: column;
+    justify-content: space-evenly;
+    flex-basis: 100px;
+    flex-shrink: 50px;
+    align-self: center;
+}
+
+.campos {
+    flex-direction: column;
+    text-align: center;
+    border-radius: 20px;
+
+}
+
+.topo {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 40px;
+}
+
+.abas {
+    display: flex;
+    gap: 38px;
+}
+
+.aba {
+    font-size: 15px;
+    letter-spacing: 1px;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+
+.formulario {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 10px;
+    max-width: 690px;
+    margin-left: 34%;
+}
+
+.rotulo {
+    margin: 0 0 8px 18px;
+    font-weight: 800;
+    font-size: 17px;
+    margin-top: 15%;
+    margin-left: 5%;
+}
+
+
+
+.campo input {
+    width: 80%;
+    height: 25px;
+    padding: 0 26px;
+    font-size: 13px;
+    color: #1d1d1b;
+    border: 1px solid #1d1d1b;
+    border-radius: 20px;
+    outline: none;
+    margin-bottom: 5%;
+    font-family: 'Fraunces', sans-serif;
+   
+}
+
+
+.btn-finalizar {
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin-top: 20px;
+    width: 20%;
+    height: 6vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e4a0b7;
+    font-weight: 400;
+    font-size: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+}
