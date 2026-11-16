@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Amor entre patas</title>
+    <link rel="icon" type="image/png" href="./assets/imgs/Post Lar É Onde Existe Amor Adoção De Animais (9).png">
      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/TelaLoginCSS.css">
@@ -27,15 +28,19 @@
         </div>
 
         <div class="bt_voltar">
-            <a href="./TelaCadastro.htmls">Voltar</a>
+            <a href="./SiteHome.html">Voltar</a>
         </div>
     </div>
 
+    <div class="titulo1">
     <h2>Já faz parte do amor entre patas? <br></h2>
+    </div>
 
+<div class="titulo2">
     <span style="color: #df7a9c;">
         <h2>efetue seu LOGIN</h2>
     </span> <br>
+</div>
 
 
     <div class="conteiner">
@@ -59,4 +64,44 @@
         <div id="div_exibir"></div>
     </div>
 </body>
+<script>
+
+function cadastrar() {
+
+    let tudoCerto = true;
+    let mensagem = '';
+
+    if (ipt_email.value == '') {
+        tudoCerto = false;
+        mensagem = 'Preencha o campo de e-mail!';
+        ipt_email.style.borderColor = '#E03131';
+    } else {
+        ipt_email.style.borderColor = '';
+    }
+
+  
+    if (ipt_senha.value == '') {
+        tudoCerto = false;
+        mensagem = 'Preencha o campo de senha!';
+        ipt_senha.style.borderColor = '#E03131';
+    } else {
+        ipt_senha.style.borderColor = '';
+    }
+
+  
+    if (ipt_email.value != '' && !ipt_email.value.includes('@')) {
+        tudoCerto = false;
+        mensagem = 'Insira um e-mail válido!';
+        ipt_email.style.borderColor = '#E03131';
+    }
+
+
+    if (tudoCerto == true) {
+        div_exibir.innerHTML = 'Login validado com sucesso!';
+    } else {
+        div_exibir.innerHTML = mensagem;
+    }
+}
+
+</script>
 </html>

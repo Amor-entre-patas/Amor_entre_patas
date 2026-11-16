@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro | Amor entre patas</title>
+    <link rel="icon" type="image/png" href="./assets/imgs/Post Lar É Onde Existe Amor Adoção De Animais (9).png">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./CSS/TelaCadastroCSS.css">
@@ -30,16 +31,20 @@
         </div>
 
         <div class="bt_voltar">
-            <a href="./TelaCadastro.htmls">Voltar</a>
+            <a href="./SiteHome.html">Voltar</a>
         </div>
     </div>
 
+    <div class="titulo1">
     <h2>Se interessou pelo projeto? <br>
         venha fazer parte disso tambem!</h2>
-
+    </div>
+    
+    <div class="titulo2">
     <span style="color: #df7a9c;">
         <h2>Cadastre-se</h2>
     </span> <br>
+    </div>
 
 
     <div class="conteiner">
@@ -47,7 +52,7 @@
 
             <div class="campo-cpf">
             <div class="rotulo-cpf"> Cpf:</div>
-            <input class="campos" placeholder="Insira seu cpf" id="ipt_cpf" onkeyup="validarCpf()"> <br>
+            <input class="campos" placeholder="Insira seu cpf" id="ipt_cpf"> <br>
             </div> <br>
            
 
@@ -72,60 +77,98 @@
         </div>
 
 
-        <div class="btn-finalizar" onclick="cadastrar()"><a href="#">Cadastrar</a></div>
+       <div class="btn-finalizar" onclick="validarCadastro()">
+    <a href="#">Cadastrar</a>
+    </div>
 
 
         <div id="div_exibir"></div>
     </div>
 </body>
 <script>
-    let cpfValido = false;
+    
+let cpfValido = false;
 
-    function validarCpf() {
+function validarCadastro() {
 
-        let tudoCerto = true;
-        let campos = [ipt_cpf, ipt_email, ipt_CodigoValidacao, ipt_senha, ipt_ConfirmacaoSenha];
+    let tudoCerto = true;
+    let quantidadePreenchida = 0;
+    let mensagem = '';
 
-        for (let i = 0; i < campos.length; i++) {
+    let campos = [
+        ipt_cpf,
+        ipt_email,
+        ipt_CodigoValidacao,
+        ipt_senha,
+        ipt_ConfirmacaoSenha
+    ];
 
-            if (campos[i].value == '') {
-                div_exibir.innerHTML = 'Preencha todos os campos!';
-                campos[i].style.borderColor = '#E03131';
-                tudoCerto = false;
-            } else {
-                campos[i].style.borderColor = '';
-            }
-        }
+    let i = 0;
 
+    while (i < campos.length) {
 
-        if (ipt_cpf.value.length != 11) {
-            div_exibir.innerHTML = 'CPF inválido. Ele precisa ter 11 números.';
-            ipt_cpf.style.borderColor = '#E03131';
-            cpfValido = false;
+        if (campos[i].value == '') {
+
+            campos[i].style.borderColor = '#E03131';
             tudoCerto = false;
+
         } else {
-            cpfValido = true;
+
+            campos[i].style.borderColor = '';
+            quantidadePreenchida = quantidadePreenchida + 1;
+
         }
 
-
-        if (ipt_senha.value.length < 8) {
-            div_exibir.innerHTML = 'Senha fraca. A senha precisa ter pelo menos 8 caracteres.';
-            ipt_senha.style.borderColor = '#E03131';
-            tudoCerto = false;
-        }
-
-
-        if (ipt_ConfirmacaoSenha.value != ipt_senha.value) {
-            div_exibir.innerHTML = 'As senhas não são iguais!';
-            ipt_ConfirmacaoSenha.style.borderColor = '#E03131';
-            tudoCerto = false;
-        }
-
-        if (tudoCerto) {
-            div_exibir.innerHTML = '';
-            alert('Cadastro enviado!');
-        }
+        i = i + 1;
     }
+
+    if (quantidadePreenchida != campos.length) {
+
+        mensagem = 'Preencha todos os campos!';
+
+    }
+
+    if (ipt_cpf.value.length != 11) {
+
+        mensagem = 'CPF inválido. Ele precisa ter 11 números.';
+        ipt_cpf.style.borderColor = '#E03131';
+        cpfValido = false;
+        tudoCerto = false;
+
+    } else {
+
+        cpfValido = true;
+
+    }
+
+    if (ipt_senha.value.length < 8) {
+
+        mensagem = 'Senha fraca. A senha precisa ter pelo menos 8 caracteres.';
+        ipt_senha.style.borderColor = '#E03131';
+        tudoCerto = false;
+
+    }
+
+    if (ipt_ConfirmacaoSenha.value != ipt_senha.value) {
+
+        mensagem = 'As senhas não são iguais!';
+        ipt_ConfirmacaoSenha.style.borderColor = '#E03131';
+        tudoCerto = false;
+
+    }
+
+    if (tudoCerto && cpfValido) {
+
+        div_exibir.innerHTML = '';
+        alert('Cadastro enviado!');
+
+    } else {
+
+        div_exibir.innerHTML = mensagem;
+
+    }
+}
+
 </script>
 
 </html>
