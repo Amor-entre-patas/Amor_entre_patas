@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro | Amor entre patas</title>
-    <link rel="icon" type="image/png" href="./assets/imgs/Post Lar É Onde Existe Amor Adoção De Animais (9).png">
+    <link rel="icon" type="image/svg+xml" href="./assets/imgs/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./CSS/TelaCadastroCSS.css">
@@ -22,7 +22,7 @@
     <div class="topo">
         <div class="abas">
             <div class="bt_cadastro">
-                <a href="./TelaCadastro.htmls">Cadastro</a>
+                <a href="./TelaCadastro.html">Cadastro</a>
             </div>
 
             <div class="bt_login">
@@ -36,14 +36,14 @@
     </div>
 
     <div class="titulo1">
-    <h2>Se interessou pelo projeto? <br>
-        venha fazer parte disso tambem!</h2>
+        <h2>Se interessou pelo projeto? <br>
+            venha fazer parte disso tambem!</h2>
     </div>
-    
+
     <div class="titulo2">
-    <span style="color: #df7a9c;">
-        <h2>Cadastre-se</h2>
-    </span> <br>
+        <span style="color: #df7a9c;">
+            <h2>Cadastre-se</h2>
+        </span> <br>
     </div>
 
 
@@ -51,124 +51,123 @@
         <div class="formulario">
 
             <div class="campo-cpf">
-            <div class="rotulo-cpf"> Cpf:</div>
-            <input class="campos" placeholder="Insira seu cpf" id="ipt_cpf"> <br>
+                <div class="rotulo-cpf"> Cpf:</div>
+                <input class="campos" placeholder="Insira seu cpf" id="ipt_cpf"> <br>
             </div> <br>
-           
+
 
             <div class="campo">
-            <div class="rotulo">E-mail:</div>
-            <input class="campos" placeholder="Insira seu e-mail" id="ipt_email">
+                <div class="rotulo">E-mail:</div>
+                <input class="campos" placeholder="Insira seu e-mail" id="ipt_email">
             </div>
 
             <div class="campo">
-           <div class="rotulo"> Código de validação:</div>
-            <input class="campos" placeholder="Insira o código de validação" id="ipt_CodigoValidacao"> <br>
+                <div class="rotulo">Nome:</div>
+                <input class="campos" placeholder="Insira seu nome" id="ipt_nome">
             </div>
 
             <div class="campo">
-            <div class="rotulo"> Senha:</div>
-            <input class="campos" placeholder="Insira sua senha" type="password" id="ipt_senha">
+                <div class="rotulo"> Senha:</div>
+                <input class="campos" placeholder="Insira sua senha" type="password" id="ipt_senha">
             </div>
 
             <div class="campo">
-          <div class="rotulo">  Confirmar senha:</div>
-            <input class="campos" placeholder="Confirme sua senha"  type="password" id="ipt_ConfirmacaoSenha"> <br>
+                <div class="rotulo"> Confirmar senha:</div>
+                <input class="campos" placeholder="Confirme sua senha" type="password" id="ipt_confirmarSenha"> <br>
+            </div>
+
+
+            <div class="btn-finalizar" onclick="validarCadastro()">
+                <a href="javascript:void(0)">Cadastro</a>
+            </div>
+
+            <div id="div_exibir"></div>
         </div>
-
-
-       <div class="btn-finalizar" onclick="validarCadastro()">
-    <a href="#">Cadastrar</a>
-    </div>
-
-
-        <div id="div_exibir"></div>
-    </div>
 </body>
+
 <script>
-    
-let cpfValido = false;
+    function validarCadastro() {
+        let tudoCerto = true;
+        let mensagem = '';
 
-function validarCadastro() {
-
-    let tudoCerto = true;
-    let quantidadePreenchida = 0;
-    let mensagem = '';
-
-    let campos = [
-        ipt_cpf,
-        ipt_email,
-        ipt_CodigoValidacao,
-        ipt_senha,
-        ipt_ConfirmacaoSenha
-    ];
-
-    let i = 0;
-
-    while (i < campos.length) {
-
-        if (campos[i].value == '') {
-
-            campos[i].style.borderColor = '#E03131';
+        if (ipt_cpf.value == '' || ipt_cpf.value.length != 11) {
             tudoCerto = false;
-
+            mensagem = 'Insira um CPF válido com 11 dígitos!';
+            ipt_cpf.style.borderColor = '#E03131';
         } else {
-
-            campos[i].style.borderColor = '';
-            quantidadePreenchida = quantidadePreenchida + 1;
-
+            ipt_cpf.style.borderColor = '';
         }
 
-        i = i + 1;
+        if (ipt_email.value == '' || !ipt_email.value.includes('@')) {
+            tudoCerto = false;
+            mensagem = 'Insira um e-mail válido!';
+            ipt_email.style.borderColor = '#E03131';
+        } else {
+            ipt_email.style.borderColor = '';
+        }
+
+        if (ipt_nome.value == '') {
+            tudoCerto = false;
+            mensagem = 'Preencha o campo de nome!';
+            ipt_nome.style.borderColor = '#E03131';
+        } else {
+            ipt_nome.style.borderColor = '';
+        }
+
+        if (ipt_senha.value == '') {
+            tudoCerto = false;
+            mensagem = 'Preencha o campo de senha!';
+            ipt_senha.style.borderColor = '#E03131';
+        } else {
+            ipt_senha.style.borderColor = '';
+        }
+
+        if (ipt_confirmarSenha.value != ipt_senha.value || ipt_confirmarSenha.value == '') {
+            tudoCerto = false;
+            mensagem = 'As senhas não coincidem!';
+            ipt_confirmarSenha.style.borderColor = '#E03131';
+        } else {
+            ipt_confirmarSenha.style.borderColor = '';
+        }
+
+        if (tudoCerto == true) {
+            cadastrar();
+        } else {
+            alert(mensagem);
+        }
     }
 
-    if (quantidadePreenchida != campos.length) {
+    function cadastrar() {
+        var cpfVar = ipt_cpf.value;
+        var emailVar = ipt_email.value;
+        var senhaVar = ipt_senha.value;
+        var nomeVar = ipt_nome.value;
 
-        mensagem = 'Preencha todos os campos!';
+        fetch("/usuarios/cadastrar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nomeServer: nomeVar,
+                cpfServer: cpfVar,
+                emailServer: emailVar,
+                senhaServer: senhaVar
+            })
+        }).then(function (resposta) {
+            if (resposta.ok) {
+                alert("Cadastro realizado com sucesso! Você será redirecionado para o login.");
+                window.location = "./TelaLogin.html";
+            } else {
+                alert("Houve um erro ao realizar o cadastro! Verifique o terminal do servidor.");
+            }
+        }).catch(function (erro) {
+            console.log("#ERRO: ", erro);
+            alert("Erro ao conectar com o servidor.");
+        });
 
+        return false;
     }
-
-    if (ipt_cpf.value.length != 11) {
-
-        mensagem = 'CPF inválido. Ele precisa ter 11 números.';
-        ipt_cpf.style.borderColor = '#E03131';
-        cpfValido = false;
-        tudoCerto = false;
-
-    } else {
-
-        cpfValido = true;
-
-    }
-
-    if (ipt_senha.value.length < 8) {
-
-        mensagem = 'Senha fraca. A senha precisa ter pelo menos 8 caracteres.';
-        ipt_senha.style.borderColor = '#E03131';
-        tudoCerto = false;
-
-    }
-
-    if (ipt_ConfirmacaoSenha.value != ipt_senha.value) {
-
-        mensagem = 'As senhas não são iguais!';
-        ipt_ConfirmacaoSenha.style.borderColor = '#E03131';
-        tudoCerto = false;
-
-    }
-
-    if (tudoCerto && cpfValido) {
-
-        div_exibir.innerHTML = '';
-        alert('Cadastro enviado!');
-
-    } else {
-
-        div_exibir.innerHTML = mensagem;
-
-    }
-}
-
 </script>
 
 </html>
