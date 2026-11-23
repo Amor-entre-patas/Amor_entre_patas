@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórias | Amora</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/imgs/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/SiteCliente.css">
+</head>
+
+<body>
+
+    <nav class="nav-site">
+        <div class="nav-logo">
+            <img src="./assets/imgs/LogoSiteCliente.png" alt="LogoSiteCliente">
+            <p>ENCONTROS QUE TRANSFORMAM VIDAS</p>
+        </div>
+
+        <div class="bt_sair">
+            <a href="./SiteCliente.html#historias">← Voltar às histórias</a>
+        </div>
+    </nav>
+
+    <div class="livro-fundo">
+
+        <div class="livro">
+
+            <!-- Folha 1: capa -->
+            <div class="livro-folha ativa">
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/AmoraArthur.jpeg" alt="Amora">
+                </div>
+                <div class="livro-pagina livro-capa">
+                    <span class="livro-tag">♡ A história de Amora</span>
+                    <h1>Um encontro inesperado, <span style="color: #df7a9c;">um amor para a vida toda</span></h1>
+                    <p class="livro-divisor">♡ · ♡ · ♡</p>
+                    <p class="livro-sub">Algumas passagens duram pouco, mas deixam marcas que ficam para sempre.</p>
+                </div>
+            </div>
+
+            <!-- Folha 2: texto + foto -->
+            <div class="livro-folha">
+                <div class="livro-pagina">
+                    <p class="livro-texto capitular">A Amora apareceu em nossas vidas em uma situação muito delicada.
+                        Nós a encontramos na rua e, ao percebermos que ela precisava de ajuda,
+                        minha mãe e eu decidimos tentar acolhê-la. Durante esse processo, descobrimos
+                        que uma mulher dizia ser responsável por ela. Depois de conversarmos e conseguirmos
+                        sua autorização, finalmente pudemos levar a Amora para casa.</p>
+                </div>
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/Amoracama1.jpeg" alt="Amora na cama">
+                </div>
+            </div>
+
+            <!-- Folha 3: foto + texto -->
+            <div class="livro-folha">
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/AmoraCatia.jpeg" alt="Amora com a Cátia">
+                </div>
+                <div class="livro-pagina">
+                    <p class="livro-texto">Aos poucos, ela foi conquistando um espaço muito especial em nossos corações.
+                        Queríamos oferecer a ela todo o carinho, cuidado e segurança que merecia.
+                        Mas, infelizmente, um dia a Amora acabou fugindo e se perdeu.</p>
+                </div>
+            </div>
+
+            <!-- Folha 4: texto + foto -->
+            <div class="livro-folha">
+                <div class="livro-pagina">
+                    <p class="livro-texto">Desde então, ficou a saudade e a esperança de que ela esteja bem.
+                        Mesmo com tudo o que aconteceu, sua passagem por nossas vidas deixou lembranças que nunca vamos esquecer.
+                        A Amora nos ensinou que acolher um animal é também criar um vínculo que permanece,
+                        independentemente do tempo.</p>
+                </div>
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/Amoracama2.jpeg" alt="Amora na cama">
+                </div>
+            </div>
+
+            <!-- Folha 5: lembranças + fim -->
+            <div class="livro-folha">
+                <div class="livro-pagina foto">
+                    <div class="livro-duplas">
+                        <img src="./assets/imgs/AmoraPata.jpeg" alt="Patinha da Amora">
+                        <img src="./assets/imgs/AmoraSol.jpeg" alt="Amora ao sol">
+                    </div>
+                </div>
+                <div class="livro-pagina livro-capa">
+                    <span class="livro-tag">♡ Fim</span>
+                    <h1>Obrigada, <span style="color: #df7a9c;">Amora.</span></h1>
+                    <p class="livro-divisor">♡ · ♡ · ♡</p>
+                    <p class="livro-sub">Por cada dia, cada olhar e cada lembrança.</p>
+                    <div class="livro-voltar">
+                        <a href="./SiteCliente.html#historias">Ler outras histórias →</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="livro-controles">
+            <button onclick="virarFolha(-1)">‹ Anterior</button>
+            <span id="livro_contador">1 / 5</span>
+            <button onclick="virarFolha(1)">Próxima ›</button>
+        </div>
+
+    </div>
+
+    <script>
+        var folhaAtual = 0;
+
+        // Mostra só a folha da vez e atualiza o "1 / 5"
+        function mostrarFolha() {
+            var folhas = document.querySelectorAll(".livro-folha");
+
+            for (var i = 0; i < folhas.length; i++) {
+                folhas[i].classList.remove("ativa");
+            }
+
+            folhas[folhaAtual].classList.add("ativa");
+            livro_contador.innerHTML = `${folhaAtual + 1} / ${folhas.length}`;
+        }
+
+        // direcao: 1 = próxima folha, -1 = folha anterior
+        function virarFolha(direcao) {
+            var total = document.querySelectorAll(".livro-folha").length;
+            folhaAtual += direcao;
+
+            if (folhaAtual < 0) {
+                folhaAtual = 0;
+            }
+            if (folhaAtual > total - 1) {
+                folhaAtual = total - 1;
+            }
+
+            mostrarFolha();
+        }
+    </script>
+</body>
+
+</html>

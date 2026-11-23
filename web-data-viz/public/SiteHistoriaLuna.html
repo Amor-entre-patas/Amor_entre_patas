@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórias | Amora</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/imgs/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/SiteCliente.css">
+</head>
+
+<body>
+
+    <nav class="nav-site">
+        <div class="nav-logo">
+            <img src="./assets/imgs/LogoSiteCliente.png" alt="LogoSiteCliente">
+            <p>ENCONTROS QUE TRANSFORMAM VIDAS</p>
+        </div>
+
+        <div class="bt_sair">
+            <a href="./SiteCliente.html#historias">← Voltar às histórias</a>
+        </div>
+    </nav>
+
+    <div class="livro-fundo">
+
+        <div class="livro">
+
+            <!-- Folha 1: capa -->
+            <div class="livro-folha ativa">
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/LunaFamilia.jpeg" alt="Luna">
+                </div>
+                <div class="livro-pagina livro-capa">
+                    <span class="livro-tag">♡ A história de Luna</span>
+                    <h1>Dois olhinhos azuis que <span style="color: #df7a9c;"> mudaram uma vida</span></h1>
+                    <p class="livro-divisor">♡ · ♡ · ♡</p>
+                    <p class="livro-sub">Marcas que ficam para sempre.</p>
+                </div>
+            </div>
+
+            <!-- Folha 2: texto + foto -->
+            <div class="livro-folha">
+                <div class="livro-pagina">
+                    <p class="livro-texto capitular">A Luna chegou até nós de uma maneira inesperada. 
+                        Ela foi encontrada dentro de uma caixa de papelão, em uma situação em que precisava muito de cuidado 
+                        e proteção. Quando soubemos de sua história, não conseguimos ignorar aquela pequena vida que precisava 
+                        de uma oportunidade.</p>
+                </div>
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/LunaVesgaDeVerdade.jpeg" alt="Luna vesga real">
+                </div>
+            </div>
+
+            <!-- Folha 3: foto + texto -->
+            <div class="livro-folha">
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/LunaGamer.jpeg" alt="Luna gamer">
+                </div>
+                <div class="livro-pagina">
+                    <p class="livro-texto">Decidimos acolhê-la e dar a ela a chance de conhecer algo diferente: 
+                        um lar, uma família e todo o carinho que um animal merece receber. 
+                        Com seus dois olhinhos azuis, a Luna foi conquistando seu espaço e transformando nossos dias.</p>
+                </div>
+            </div>
+
+            <!-- Folha 4: texto + foto -->
+            <div class="livro-folha">
+                <div class="livro-pagina">
+                    <p class="livro-texto">Hoje, olhar para ela é lembrar de como um simples gesto de acolhimento
+                         pode mudar completamente o destino de um animal. A Luna não encontrou apenas um lugar para ficar, 
+                         encontrou uma família. E nós encontramos nela uma companheira muito especial.</p>
+                </div>
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/LunaNaCama.jpeg" alt="Luna cama">
+                </div>
+            </div>
+
+            <!-- Folha 5: lembranças + fim -->
+            <div class="livro-folha">
+                <div class="livro-pagina foto">
+                    <div class="livro-duplas">
+                        <img src="./assets/imgs/LunaVesga.jpeg" alt="luna vesga1">
+                        <img src="./assets/imgs/LunaDormindo.jpeg" alt="Luna dormindo">
+                    </div>
+                </div>
+                <div class="livro-pagina livro-capa">
+                    <span class="livro-tag">♡ Fim</span>
+                    <h1>Obrigada, <span style="color: #df7a9c;">Luna.</span></h1>
+                    <p class="livro-divisor">♡ · ♡ · ♡</p>
+                    <p class="livro-sub">Por cada dia, cada olhar e cada lembrança.</p>
+                    <div class="livro-voltar">
+                        <a href="./SiteCliente.html#historias">Ler outras histórias →</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="livro-controles">
+            <button onclick="virarFolha(-1)">‹ Anterior</button>
+            <span id="livro_contador">1 / 5</span>
+            <button onclick="virarFolha(1)">Próxima ›</button>
+        </div>
+
+    </div>
+
+    <script>
+        var folhaAtual = 0;
+
+        // Mostra só a folha da vez e atualiza o "1 / 5"
+        function mostrarFolha() {
+            var folhas = document.querySelectorAll(".livro-folha");
+
+            for (var i = 0; i < folhas.length; i++) {
+                folhas[i].classList.remove("ativa");
+            }
+
+            folhas[folhaAtual].classList.add("ativa");
+            livro_contador.innerHTML = `${folhaAtual + 1} / ${folhas.length}`;
+        }
+
+        // direcao: 1 = próxima folha, -1 = folha anterior
+        function virarFolha(direcao) {
+            var total = document.querySelectorAll(".livro-folha").length;
+            folhaAtual += direcao;
+
+            if (folhaAtual < 0) {
+                folhaAtual = 0;
+            }
+            if (folhaAtual > total - 1) {
+                folhaAtual = total - 1;
+            }
+
+            mostrarFolha();
+        }
+    </script>
+</body>
+
+</html>

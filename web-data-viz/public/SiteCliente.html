@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor Entre Patas</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/imgs/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/SiteCliente.css">
+</head>
+
+<body>
+
+    <nav class="nav-site">
+        <div class="nav-logo">
+            <img src="./assets/imgs/LogoSiteCliente.png" alt="LogoSiteCliente">
+            <p>ENCONTROS QUE TRANSFORMAM VIDAS</p>
+        </div>
+       <div class="nav-links">
+    <a href="#inicio">Início</a>
+    <a href="#adotar">Quero Adotar</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#historias">Histórias de amor</a>
+</div>
+
+        <div class="bt_sair">
+            <a href="./SiteHome.html">Sair</a>
+        </div>
+    </nav>
+
+
+   <div class="banner" id="inicio">
+        <div class="texto">
+            <h4>Que bom ter você por aqui ♡</h4>
+
+            <h1>Seu próximo encontro
+                pode mudar
+                <span style="color: #df7a9c;">duas vidas.</span>
+            </h1>
+
+            <h3>Aqui, cada patinha tem uma história
+                e um novo começo pode ser com você.</h3>
+        </div>
+
+
+
+        <img src="./assets/imgs/CachorroLambendo.png" alt="CachorroLambendo">
+    </div>
+
+    <div class="texto2" id="adotar">
+        <h1>Encontre seu novo companheiro <span style="color: #df7a9c;"> ♡</span></h1>
+        <h4>Um amigo está esperando por um lar. Quem sabe o seu?</h4>
+    </div>
+
+
+    <!-- -- card dos animais -- -->
+
+    <!-- Onde os cards aparecem -->
+    <div class="lista-animais" id="lista_animais"></div>
+
+    <!-- Pop-up (começa escondido) -->
+    <div class="modal-fundo" id="modal_fundo">
+        <div class="modal">
+            <button class="modal-fechar" onclick="fecharModal()">✕</button>
+            <h2 id="modal_titulo"></h2>
+            <p class="modal-sub">Um novo encontro começa aqui.</p>
+            <img id="modal_foto" src="" alt="Animal">
+            <p id="modal_detalhes"></p>
+            <p class="modal-descricao" id="modal_descricao"></p>
+            <p id="modal_contato"></p>
+            <button class="btn-conhecer" id="modal_favorito" onclick="favoritar(animalAberto)">♡ Guardar nos
+                favoritos</button>
+        </div>
+    </div>
+
+    <div class="secao-quiz" id="quiz">
+        <div class="quiz-conteudo">
+
+            <img class="quiz-icone" src="./assets/imgs/CoraçãoEpata.png" alt="">
+
+            <div class="quiz-texto">
+                <h4><span style="color: #df7a9c;">Antes do encontro, uma reflexão</span></h4>
+                <h2>Estou pronto para adotar?</h2>
+                <p>Adotar é muito mais do que abrir a porta de casa. É abrir espaço na vida.<br>
+                    Descubra como se preparar para esse compromisso cheio de amor.</p>
+            </div>
+
+            <div class="quiz-botao">
+                <a href="./Quiz.html">Quero fazer o quiz →</a>
+                <p>6 perguntas · alguns minutinhos de carinho</p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="secao-historias" id="historias">
+
+        <div class="hist-topo">
+            <div>
+                <h2>Histórias que merecem ser contadas</h2>
+                <p>Porque por trás de cada adoção, existe um amor que transforma.</p>
+            </div>
+            <div class="hist-setas">
+                <button onclick="moverHistorias(-1)">‹</button>
+                <button onclick="moverHistorias(1)">›</button>
+            </div>
+        </div>
+
+        <!-- Onde os cards das histórias aparecem -->
+        <div class="hist-trilho" id="trilho_historias"></div>
+
+        <div class="hist-compartilhar">
+            <div class="hist-comp-texto">
+                <h3>Você também tem uma história de amor para contar?</h3>
+                <p>Seu relato pode inspirar um novo começo.</p>
+            </div>
+
+            <div class="hist-comp-form" id="form_historia">
+                <input type="text" id="input_email_historia" placeholder="Digite seu e-mail">
+                <button onclick="enviarHistoria()">Compartilhar minha história →</button>
+            </div>
+        </div>
+
+        <!-- Mensagem que aparece depois do envio (começa escondida) -->
+        <div class="hist-mensagem" id="msg_historia"></div>
+
+    </div>
+
+
+
+
+    <!-- Faixa "Meu cantinho" -->
+    <div class="secao-cantinho">
+        <div class="cantinho-conteudo">
+            <div class="cantinho-titulo">
+                <div class="cantinho-icone">👤</div>
+                <div>
+                    <h2>Meu cantinho</h2>
+                    <p>Um espaço para guardar seus encontros.</p>
+                </div>
+            </div>
+
+            <button class="cantinho-btn" id="btn_favoritos" onclick="abrirCantinho()">♡ Meus favoritos (0)</button>
+        </div>
+    </div>
+
+    <!-- Pop-up dos favoritos (começa escondido) -->
+    <div class="cantinho-fundo" id="cantinho_fundo">
+        <div class="cantinho-modal">
+            <button class="modal-fechar" onclick="fecharCantinho()">✕</button>
+            <h2>Meu cantinho</h2>
+            <p class="modal-sub">Que bom ter você aqui ♡</p>
+
+            <button class="cantinho-aba">Favoritos</button>
+
+            <div class="fav-lista" id="lista_favoritos"></div>
+        </div>
+    </div>
+
+
+    <script>
+        var animais = [
+            {
+                id: 1, nome: "Holly", sexo: "♀", idade: "4 meses", especie: "Cachorro",
+                porte: "Porte médio pequeno", contato: "Direct: @ajudaanimal", foto: "./assets/imgs/AdocaoHolly.png.PNG",
+                descricao: `Holly tem apenas 4 meses, mas já enfrentou situações que nenhum filhote deveria viver. Ao lado de seus irmãos, foi encontrada em condições de abandono, passando fome e sem receber os cuidados necessários. Felizmente, todos foram resgatados e agora Holly tem a oportunidade de começar uma nova história. <br><br>
+            Apesar de tudo que passou, ela é uma filhotinha muito dócil e sociável, que convive bem com outros cães e gatos. Agora, tudo o que precisa é de uma família que ofereça o carinho, a segurança e o cuidado que sempre mereceu. <br><br>
+            <b>Informações:</b> <br>
+            Fêmea · 4 meses · Porte médio pequeno <br>
+            Dócil e sociável · Aceita cães e gatos`
+            },
+            {
+                id: 2, nome: "Hantu", sexo: "♂", idade: "1 ano e 10 meses", especie: "Gato",
+                porte: "Porte médio", contato: "Email: adote@catland.org.br", foto: "./assets/imgs/AdocaoHantu.jpg.PNG",
+                descricao: `Hantu tem 1 ano e 10 meses e já enfrentou uma situação de maus-tratos antes de chegar à Catland, por meio de um resgate realizado com a Polícia Civil de São Paulo. Hoje, ele está seguro e pronto para encontrar uma família que lhe ofereça todo o carinho que merece. <br><br>
+            Carinhoso e cheio de charme, Hantu adora receber cafunés e atenção. Ele já conquistou muitos corações com seu jeitinho especial, mas ainda falta encontrar alguém para chamar de família. Será que esse alguém pode ser você?`
+            },
+            {
+                id: 3, nome: "Bôrbí", sexo: "♂", idade: "3 anos", especie: "Cachorro",
+                porte: "Porte médio", contato: "Direct: @ajudaanimal", foto: "./assets/imgs/AdocaoBorbi.jpg.PNG",
+                descricao: `Bôrbí tem 3 anos e espera por uma família desde abril. Ele foi resgatado em uma situação muito delicada, enfrentando uma infestação de larvas que causava feridas e muito sofrimento. Felizmente, recebeu os cuidados necessários e hoje está pronto para encontrar um lar cheio de carinho. <br><br>
+            Apesar de tudo que passou, Bôrbí é um cachorrinho extremamente dócil e sociável, que convive muito bem com outros cães. É um menino de porte médio, peludinho e cheio de amor para oferecer. Agora, só falta alguém enxergar nele a oportunidade de um novo começo.`
+            }
+        ];
+
+        var historias = [
+            {
+                nome: "Amora", foto: "./assets/imgs/FotoAora.jpeg",
+                titulo: "Um encontro inesperado, um amor para a vida toda",
+                texto: "Amora precisava de uma família, mas acabou deixando muito mais do que lembranças: deixou um amor que continua vivo.",
+                 link: "./SiteHistoriaAmora.html"
+            },
+            {
+                nome: "Luna", foto: "./assets/imgs/FotoLuna.jpeg",
+                titulo: "Dois olhinhos azuis que mudaram uma vida",
+                texto: "Luna foi encontrada em uma caixa de papelão, mas encontrou muito mais do que um lar: encontrou uma família e um amor que transformou os dias de quem a acolheu.", 
+                link: "./SiteHistoriaLuna.html"
+            }
+        ];
+
+        var favoritos = [];
+        var animalAberto = 0;
+
+        // Roda quando a página abre: lê os favoritos salvos e desenha tudo
+        function iniciar() {
+            var salvo = localStorage.getItem("favoritos");
+            if (salvo != null) {
+                favoritos = JSON.parse(salvo);
+            }
+            desenharCards();
+            desenharFavoritos();
+            desenharHistorias();
+        }
+
+        // Desenha um card para cada animal da lista
+        function desenharCards() {
+            lista_animais.innerHTML = "";
+
+            for (var i = 0; i < animais.length; i++) {
+                var a = animais[i];
+                var classeCoracao = "";
+                var simbolo = "♡";
+
+                if (favoritos.includes(a.id)) {
+                    classeCoracao = "ativo";
+                    simbolo = "♥";
+                }
+
+                lista_animais.innerHTML += `
+                <div class="card-animal">
+                    <div class="card-foto">
+                        <img src="${a.foto}" alt="${a.nome}">
+                        <button class="coracao ${classeCoracao}" onclick="favoritar(${a.id})">${simbolo}</button>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-titulo">
+                            <h3>${a.nome}</h3>
+                            <span>${a.sexo}</span>
+                        </div>
+                        <p>${a.idade} · ${a.especie} · ${a.porte}</p>
+                        <p>${a.contato}</p>
+                        <button class="btn-conhecer" onclick="abrirModal(${a.id})">Conhecer ${a.nome} →</button>
+                    </div>
+                </div>
+            `;
+            }
+        }
+
+        // Abre o pop-up com os dados do animal clicado
+        function abrirModal(idAnimal) {
+            for (var i = 0; i < animais.length; i++) {
+                if (animais[i].id == idAnimal) {
+                    var a = animais[i];
+                    animalAberto = a.id;
+                    modal_titulo.innerHTML = `Conheça ${a.nome} ${a.sexo}`;
+                    modal_foto.src = a.foto;
+                    modal_detalhes.innerHTML = `${a.idade} · ${a.especie} · ${a.porte}`;
+                    modal_descricao.innerHTML = a.descricao;
+                    modal_contato.innerHTML = `👉 Para adotar, entre em contato: ${a.contato}`;
+                    atualizarBotaoModal();
+                    modal_fundo.style.display = "flex";
+                }
+            }
+        }
+
+        function fecharModal() {
+            modal_fundo.style.display = "none";
+        }
+
+        // Favoritar: se já está na lista, tira; se não está, coloca
+        function favoritar(idAnimal) {
+            var posicao = favoritos.indexOf(idAnimal);
+
+            if (posicao == -1) {
+                favoritos.push(idAnimal);
+            } else {
+                favoritos.splice(posicao, 1);
+            }
+
+            localStorage.setItem("favoritos", JSON.stringify(favoritos));
+
+            desenharCards();
+            desenharFavoritos();
+            atualizarBotaoModal();
+        }
+
+        // Muda o texto do botão do pop-up conforme o animal está favoritado ou não
+        function atualizarBotaoModal() {
+            if (favoritos.includes(animalAberto)) {
+                modal_favorito.innerHTML = "♥ Remover dos favoritos";
+            } else {
+                modal_favorito.innerHTML = "♡ Guardar nos favoritos";
+            }
+        }
+
+        // Desenha a lista de favoritos no final do site
+        // Desenha a lista de favoritos dentro do pop-up e atualiza o número do botão
+        function desenharFavoritos() {
+            lista_favoritos.innerHTML = "";
+            btn_favoritos.innerHTML = `♡ Meus favoritos (${favoritos.length})`;
+
+            if (favoritos.length == 0) {
+                lista_favoritos.innerHTML = "<p class='fav-vazio'>Você ainda não favoritou nenhum animal.</p>";
+            }
+
+            for (var i = 0; i < animais.length; i++) {
+                var a = animais[i];
+
+                if (favoritos.includes(a.id)) {
+                    lista_favoritos.innerHTML += `
+                <div class="fav-item">
+                    <img src="${a.foto}" alt="${a.nome}">
+                    <div class="fav-info">
+                        <h3>${a.nome}</h3>
+                        <p>${a.contato}</p>
+                    </div>
+                    <button class="fav-coracao" onclick="favoritar(${a.id})">♥</button>
+                </div>
+            `;
+                }
+            }
+        }
+
+        function abrirCantinho() {
+            cantinho_fundo.style.display = "flex";
+        }
+
+        function fecharCantinho() {
+            cantinho_fundo.style.display = "none";
+        }
+
+        // Desenha um card para cada história da lista
+        function desenharHistorias() {
+            trilho_historias.innerHTML = "";
+
+            for (var i = 0; i < historias.length; i++) {
+                var h = historias[i];
+
+                trilho_historias.innerHTML += `
+                <div class="hist-card">
+                    <img src="${h.foto}" alt="${h.nome}">
+                    <div class="hist-info">
+                        <span class="hist-tag">♡ A história de ${h.nome}</span>
+                        <h3>${h.titulo}</h3>
+                        <p>${h.texto}</p>
+                        <a href="${h.link}">Ler essa história →</a>
+                    </div>
+                </div>
+            `;
+            }
+        }
+
+        // Seta: 1 = vai para a direita, -1 = vai para a esquerda
+        function moverHistorias(direcao) {
+            trilho_historias.scrollLeft += direcao * trilho_historias.clientWidth;
+        }
+
+        // Mostra a mensagem depois que a pessoa digita o e-mail
+        function enviarHistoria() {
+            var email = input_email_historia.value;
+
+            if (email == "" || email.indexOf("@") == -1) {
+                msg_historia.className = "hist-mensagem erro";
+                msg_historia.innerHTML = "Digite um e-mail válido para eu poder entrar em contato.";
+            } else {
+                msg_historia.className = "hist-mensagem";
+                msg_historia.innerHTML = `Obrigada! Vou entrar em contato pelo e-mail <b>${email}</b> para você poder contar a sua história para mim ♡`;
+                input_email_historia.value = "";
+            }
+
+            msg_historia.style.display = "block";
+        }
+
+        iniciar();
+    </script>
+</body>
+
+</html>

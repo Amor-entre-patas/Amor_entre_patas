@@ -27,15 +27,6 @@ alternativa_c varchar(45),
 alternativa_d varchar(45)
 );
 
-
-create table Codigo_Validacao (
-id_codigo_validacao int primary key auto_increment,
-codigo int,
-utilizado tinyint,
-fk_usuario int,
-constraint ckFkUsuario foreign key(fk_usuario) references usuario(id_usuario)
-);
-
 create table Resultado_quiz (
 id_resultado_quiz int primary key auto_increment,
 pontuacao int,

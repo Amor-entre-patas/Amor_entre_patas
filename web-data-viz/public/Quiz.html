@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor entre patas - Quiz: você está pronto para adotar?</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/imgs/favicon.svg">
+    <link rel="stylesheet" href="./css/quiz.css">
+</head>
+
+<body class="quiz-pagina" onload="onloadEsconder()">
+    <div class="quiz-container">
+
+        <h1 class="quiz-titulo">Você está pronto para adotar? 🐾</h1>
+
+        <!-- Tela inicial -->
+        <div id="telaInicial" class="quiz-card">
+            <p class="quiz-subtitulo">
+                Adotar é um compromisso para a vida toda do animal.
+                Responda <span id="qtdPerguntasInicio"></span> perguntas rápidas com sinceridade e descubra
+                se este é o melhor momento para você.
+            </p>
+            <button id="btnIniciarQuiz" class="quiz-botao" onclick="iniciarQuiz()">INICIAR QUIZ</button>
+            <a class="quiz-botao quiz-botao-secundario" href="SiteCliente.html">Voltar</a>
+        </div>
+
+        <!-- Perguntas -->
+        <div id="jogo" class="quiz-card">
+
+            <div class="quiz-progresso">
+                Questão <span id="spanNumeroDaQuestaoAtual"></span> de <span id="qtdQuestoes"></span>
+            </div>
+
+            <div class="quiz-barra">
+                <div id="barraPreenchida" class="quiz-barra-preenchida"></div>
+            </div>
+
+            <div id="spanQuestaoExibida" class="quiz-pergunta"></div>
+
+            <div class="quiz-opcoes">
+                <div class="quiz-opcao-linha">
+                    <input type="radio" id="primeiraOpcao" name="option" class="quiz-radio" value="alternativaA">
+                    <label for="primeiraOpcao" id="labelOpcaoUm" class="quiz-opcao"></label>
+                </div>
+                <div class="quiz-opcao-linha">
+                    <input type="radio" id="segundaOpcao" name="option" class="quiz-radio" value="alternativaB">
+                    <label for="segundaOpcao" id="labelOpcaoDois" class="quiz-opcao"></label>
+                </div>
+                <div class="quiz-opcao-linha">
+                    <input type="radio" id="terceiraOpcao" name="option" class="quiz-radio" value="alternativaC">
+                    <label for="terceiraOpcao" id="labelOpcaoTres" class="quiz-opcao"></label>
+                </div>
+                <div class="quiz-opcao-linha">
+                    <input type="radio" id="quartaOpcao" name="option" class="quiz-radio" value="alternativaD">
+                    <label for="quartaOpcao" id="labelOpcaoQuatro" class="quiz-opcao"></label>
+                </div>
+            </div>
+
+            <div class="quiz-botoes">
+                <button id="btnProx" class="quiz-botao" onclick="avancar()">Próxima pergunta</button>
+            </div>
+        </div>
+
+        <!-- Resultado final -->
+        <div id="resultado" class="quiz-card quiz-resultado">
+            <div id="resultadoEmoji" class="quiz-resultado-emoji"></div>
+            <h2 id="resultadoTitulo" class="quiz-resultado-titulo"></h2>
+
+            <div class="quiz-preparo">
+                <span class="quiz-preparo-texto">Seu nível de preparo: <span id="spanPorcentagem"></span>%</span>
+                <div class="quiz-barra quiz-barra-grande">
+                    <div id="barraPreparo" class="quiz-barra-preenchida"></div>
+                </div>
+            </div>
+
+            <p id="resultadoTexto" class="quiz-resultado-texto"></p>
+
+            <div class="quiz-botoes">
+                <a id="linkAdotar" class="quiz-botao" href="SiteCliente.html">Conhecer os animais para adoção</a>
+                <button class="quiz-botao quiz-botao-secundario" onclick="tentarNovamente()">Refazer o quiz</button>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script>
+    // alternativaIdeal = a resposta que indica uma adoção consciente (o usuário não vê isso durante o quiz)
+    const listaDeQuestoes = [
+
+        {
+            pergunta: "Quanto tempo livre você tem por dia para passear, brincar e dar atenção ao animal?",
+            alternativaA: "Quase nenhum, mas ele pode ficar sozinho o dia todo",
+            alternativaB: "Uma ou duas horas por dia, de forma fixa na rotina",
+            alternativaC: "Só nos finais de semana",
+            alternativaD: "Ainda não pensei nisso",
+            alternativaIdeal: "alternativaB"
+        },
+
+        {
+            pergunta: "Todas as pessoas que moram com você concordam com a adoção?",
+            alternativaA: "Sim, conversamos e todos estão de acordo",
+            alternativaB: "Eu quero, o resto da casa vai se acostumar",
+            alternativaC: "Vai ser uma surpresa para a família",
+            alternativaD: "Moro com outras pessoas, mas não perguntei",
+            alternativaIdeal: "alternativaA"
+        },
+
+        {
+            pergunta: "Você sabe quanto custa manter um pet por mês (ração, vacinas, vermífugo, veterinário)?",
+            alternativaA: "Não gasta quase nada, ele come as sobras",
+            alternativaB: "Só preciso comprar ração e pronto",
+            alternativaC: "Sim, e já separei um valor mensal, inclusive para emergências",
+            alternativaD: "Se ficar doente eu vejo o que faço",
+            alternativaIdeal: "alternativaC"
+        },
+
+        {
+            pergunta: "Cães e gatos podem viver de 10 a 20 anos. Você está disposto a cuidar dele por todo esse tempo?",
+            alternativaA: "Sim, ele será parte da minha família até o fim",
+            alternativaB: "Enquanto ele for filhote e estiver fofinho",
+            alternativaC: "Até eu me mudar ou ter outros planos",
+            alternativaD: "Se der muito trabalho, devolvo",
+            alternativaIdeal: "alternativaA"
+        },
+
+        {
+            pergunta: "Se você precisar mudar de casa ou cidade, o que acontece com o animal?",
+            alternativaA: "Eu o deixo com algum conhecido",
+            alternativaB: "Ele vai comigo, vou procurar moradia que aceite pets",
+            alternativaC: "Procuro outro lar para ele",
+            alternativaD: "Ainda não pensei nisso",
+            alternativaIdeal: "alternativaB"
+        },
+
+        {
+            pergunta: "Seu novo pet pode arranhar móveis, fazer xixi fora do lugar e estranhar a casa no começo. Como você reage?",
+            alternativaA: "Ensino com paciência, carinho e, se precisar, peço ajuda de um profissional",
+            alternativaB: "Dou bronca ou castigo físico até ele aprender",
+            alternativaC: "Prefiro um animal que já venha 'pronto'",
+            alternativaD: "Devolvo se ele estragar alguma coisa",
+            alternativaIdeal: "alternativaA"
+        },
+
+        {
+            pergunta: "O que você pensa sobre vacinação, vermifugação e castração?",
+            alternativaA: "São caros e desnecessários",
+            alternativaB: "Só levo ao veterinário se ele ficar doente",
+            alternativaC: "É melhor deixar ele ter filhotes pelo menos uma vez",
+            alternativaD: "São parte essencial dos cuidados e da saúde dele",
+            alternativaIdeal: "alternativaD"
+        },
+
+        {
+            pergunta: "Quando você viajar ou ficar fora por alguns dias, quem cuidará do animal?",
+            alternativaA: "Deixo comida e água sobrando e ele se vira",
+            alternativaB: "Já tenho alguém de confiança, hotelzinho ou pet sitter em mente",
+            alternativaC: "Vou levar para a rua para ele se virar",
+            alternativaD: "Nunca viajo, então não preciso me preocupar",
+            alternativaIdeal: "alternativaB"
+        }
+
+    ]
+
+    // porcentagem mínima de preparo para ser considerado pronto
+    const porcentagemMinima = 0.75
+
+    // variáveis globais
+    let numeroDaQuestaoAtual = 0
+    const respostasDoUsuario = [] // guarda a alternativa escolhida em cada questão
+    const quantidadeDeQuestoes = listaDeQuestoes.length
+
+    function onloadEsconder() {
+        jogo.style.display = "none"
+        resultado.style.display = "none"
+        qtdPerguntasInicio.innerHTML = quantidadeDeQuestoes
+    }
+
+    function iniciarQuiz() {
+        telaInicial.style.display = "none"
+        jogo.style.display = "flex"
+
+        qtdQuestoes.innerHTML = quantidadeDeQuestoes
+
+        preencherHTMLcomQuestaoAtual(0)
+    }
+
+    function preencherHTMLcomQuestaoAtual(index) {
+        const questaoAtual = listaDeQuestoes[index]
+        numeroDaQuestaoAtual = index
+
+        desmarcarRadioButtons()
+
+        spanNumeroDaQuestaoAtual.innerHTML = index + 1 // ajustando porque o index começa em 0
+        barraPreenchida.style.width = (index / quantidadeDeQuestoes) * 100 + "%"
+
+        spanQuestaoExibida.innerHTML = questaoAtual.pergunta
+        labelOpcaoUm.innerHTML = questaoAtual.alternativaA
+        labelOpcaoDois.innerHTML = questaoAtual.alternativaB
+        labelOpcaoTres.innerHTML = questaoAtual.alternativaC
+        labelOpcaoQuatro.innerHTML = questaoAtual.alternativaD
+
+        if (index == quantidadeDeQuestoes - 1) {
+            btnProx.innerHTML = "Ver resultado"
+        } else {
+            btnProx.innerHTML = "Próxima pergunta"
+        }
+    }
+
+    function avancar() {
+        const options = document.getElementsByName("option") // recupera alternativas no html
+
+        let escolhida = null
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].checked) {
+                escolhida = options[i].value
+                break
+            }
+        }
+
+        if (escolhida == null) {
+            alert("Não há alternativas escolhidas. Escolha uma opção.")
+        } else {
+            // só guarda a resposta, não mostra se está certa ou errada
+            respostasDoUsuario[numeroDaQuestaoAtual] = escolhida
+
+            if (numeroDaQuestaoAtual < quantidadeDeQuestoes - 1) {
+                preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual + 1)
+            } else {
+                finalizarJogo()
+            }
+        }
+    }
+
+    function desmarcarRadioButtons() {
+        const options = document.getElementsByName("option")
+        for (let i = 0; i < options.length; i++) {
+            options[i].checked = false
+        }
+    }
+
+    function finalizarJogo() {
+        // confere todas as respostas guardadas
+        let pontuacao = 0
+        for (let i = 0; i < quantidadeDeQuestoes; i++) {
+            if (respostasDoUsuario[i] === listaDeQuestoes[i].alternativaIdeal) {
+                pontuacao++
+            }
+        }
+
+        const porcentagemDePreparo = pontuacao / quantidadeDeQuestoes
+        const estaPronto = porcentagemDePreparo >= porcentagemMinima
+        const porcentagemArredondada = Math.round(porcentagemDePreparo * 100)
+
+        jogo.style.display = "none"
+        resultado.style.display = "flex"
+
+        spanPorcentagem.innerHTML = porcentagemArredondada
+        barraPreparo.style.width = porcentagemArredondada + "%"
+
+        if (estaPronto) {
+            resultado.classList.add("quiz-pronto")
+            resultadoEmoji.innerHTML = "🐶❤️🐱"
+            resultadoTitulo.innerHTML = "Você está pronto para adotar!"
+            resultadoTexto.innerHTML =
+                "Suas respostas mostram que você entende que adotar é um compromisso para a vida toda. " +
+                "Agora é só encontrar o amigo que combina com você."
+            linkAdotar.style.display = "block"
+        } else {
+            resultado.classList.add("quiz-nao-pronto")
+            resultadoEmoji.innerHTML = "🤔"
+            resultadoTitulo.innerHTML = "Ainda não é a hora de adotar"
+            resultadoTexto.innerHTML =
+                "Algumas respostas mostram que ainda faltam cuidados importantes antes de trazer um animal para casa. " +
+                "Isso não é ruim: pensar antes evita sofrimento para você e para o bichinho. " +
+                "Converse com a família, organize sua rotina e suas finanças e tente de novo quando estiver mais preparado. " +
+                "Enquanto isso, você pode ajudar de outras formas, como sendo lar temporário, doando ração ou divulgando animais para adoção."
+            linkAdotar.style.display = "none"
+        }
+    }
+
+    function tentarNovamente() {
+        // atualiza a página
+        window.location.reload()
+    }
+</script>
