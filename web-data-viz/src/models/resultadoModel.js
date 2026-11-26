@@ -14,7 +14,8 @@ function buscarResultado(idUsuario) {
         WHERE p.fk_resultado_quiz = (
             SELECT MAX(id_resultado_quiz) FROM Resultado_quiz
             WHERE fk_usuario = ${idUsuario}
-        );
+        )
+        ORDER BY c.id_categoria;
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
