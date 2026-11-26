@@ -234,6 +234,7 @@
             <label for="email">Insira o seu e-mail para contato</label>
             <input type="email" id="email" name="email">
             <button type="button" onclick="validarEmail()">Enviar</button>
+            <div id="divEmail"></div>
         </div>
 
     </div>
@@ -264,39 +265,30 @@
         let partes = texto.split("@");
 
         if (texto === "") {
-            alert("Preencha o campo de e-mail.");
+            divEmail.innerHTML = "Preencha o campo de e-mail.";
 
         } else if (texto.includes(" ")) {
-            alert("O e-mail não pode ter espaços.");
+            divEmail.innerHTML = "O e-mail não pode ter espaços.";
 
         } else if (!texto.includes("@")) {
-            alert("O e-mail precisa ter um @.");
+            divEmail.innerHTML = "O e-mail precisa ter um @.";
 
         } else if (partes.length > 2) {
-            alert("O e-mail só pode ter um @.");
+            divEmail.innerHTML = "O e-mail só pode ter um @.";
 
         } else if (partes[0] === "") {
-            alert("Digite algo antes do @. Exemplo: nome@email.com");
+            divEmail.innerHTML = "Digite algo antes do @. Exemplo: nome@email.com";
 
         } else if (!partes[1].includes(".")) {
-            alert("Digite o domínio depois do @. Exemplo: nome@email.com");
+            divEmail.innerHTML = "Digite o domínio depois do @. Exemplo: nome@email.com";
 
         } else if (partes[1].startsWith(".") || partes[1].endsWith(".")) {
-            alert("O domínio do e-mail não é válido.");
+            divEmail.innerHTML = "O domínio do e-mail não é válido.";
 
         } else {
-            alert("E-mail enviado com sucesso!");
+            divEmail.innerHTML = "E-mail enviado com sucesso!";
         }
     }
-
-    
-function favoritar(idAnimal) {
-    fetch("/interesses/cadastrar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idAnimal: idAnimal, idUsuario: sessionStorage.ID_USUARIO })
-    });
-}
 </script>
 
 </html>
