@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórias | Amora</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/imgs/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/SiteCliente.css">
+</head>
+
+<body>
+
+    <nav class="nav-site">
+        <div class="nav-logo">
+            <img src="./assets/imgs/LogoSiteCliente.png" alt="LogoSiteCliente">
+            <p>ENCONTROS QUE TRANSFORMAM VIDAS</p>
+        </div>
+
+        <div class="bt_sair">
+            <a href="./SiteCliente.html#historias">← Voltar às histórias</a>
+        </div>
+    </nav>
+
+    <div class="livro-fundo">
+
+        <div class="livro">
+
+            <!-- Folha 1: capa -->
+            <div class="livro-folha ativa">
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/zeusMesa.jpeg" alt="zeus">
+                </div>
+                <div class="livro-pagina livro-capa">
+                    <span class="livro-tag">♡ A história de Zeus</span>
+                    <h1>Um encontro inesperado, <span style="color: #df7a9c;">um amor para a vida toda</span></h1>
+                    <p class="livro-divisor">♡ · ♡ · ♡</p>
+                    <p class="livro-sub">Algumas passagens duram pouco, mas deixam marcas que ficam para sempre.</p>
+                </div>
+            </div>
+
+            <!-- Folha 2: texto + foto -->
+            <div class="livro-folha">
+                <div class="livro-pagina">
+                    <p class="livro-texto capitular">Minha história com Zeus começou quando a gata da
+                         minha madrinha teve filhotes. Meu pai ficou encantado por ele desde o 
+                         primeiro momento, dizia o tempo todo o quanto era lindo e insistiu para que eu 
+                         fosse conhecê-lo. E não deu outra: como toda boa criança, me apaixonei e decidi 
+                         que queria adotá-lo. Foi assim que Zeus chegou à minha vida!</p>
+                </div>
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/zeusPontaCabeca.jpeg" alt="zeus ponta cabeca">
+                </div>
+            </div>
+
+            <!-- Folha 3: foto + texto -->
+            <div class="livro-folha">
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/zeusJanela.jpeg" alt="zeus janela">
+                </div>
+                <div class="livro-pagina">
+                    <p class="livro-texto">Com o passar do tempo, Zeus desenvolveu uma personalidade 
+                        um tanto quanto intensa. É um gato estressadinho, de pavio curto e nem sempre 
+                        muito paciente. Mas, apesar disso, sua beleza conquista qualquer pessoa que 
+                        cruza seu caminho. Mesmo não sendo o gato mais carinhoso do mundo, tem seu 
+                        jeitinho próprio e singelo de demonstrar afeto.</p>
+                </div>
+            </div>
+
+            <!-- Folha 4: texto + foto -->
+            <div class="livro-folha">
+                <div class="livro-pagina">
+                    <p class="livro-texto">Talvez Zeus não seja daqueles gatos que vivem pedindo colo 
+                        ou carinho, mas isso não significa que sua presença seja menos especial.
+                         A simples companhia dele já faz toda a diferença e consegue melhorar 
+                         meus dias. Afinal, aprendi que o amor também está nos pequenos gestos e na 
+                         companhia silenciosa de quem faz parte da nossa vida.</p>
+                </div>
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/zeusMesaNormal.jpeg" alt="zeus mesa normal">
+                </div>
+            </div>
+
+            <!-- Folha 5: lembranças + fim -->
+            <div class="livro-folha">
+                <div class="livro-pagina foto">
+                    <div class="livro-duplas">
+                        <img src="./assets/imgs/zeusEstante.jpeg" alt="zeus estante">
+                        <img src="./assets/imgs/zeusColar.jpeg" alt="zeus colar">
+                    </div>
+                </div>
+                <div class="livro-pagina livro-capa">
+                    <span class="livro-tag">♡ Fim</span>
+                    <h1>Obrigada, <span style="color: #df7a9c;">Zeus.</span></h1>
+                    <p class="livro-divisor">♡ · ♡ · ♡</p>
+                    <p class="livro-sub">Por cada dia, cada olhar e cada lembrança.</p>
+                    <div class="livro-voltar">
+                        <a href="./SiteCliente.html#historias">Ler outras histórias →</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="livro-controles">
+            <button onclick="virarFolha(-1)">‹ Anterior</button>
+            <span id="livro_contador">1 / 5</span>
+            <button onclick="virarFolha(1)">Próxima ›</button>
+        </div>
+
+    </div>
+
+    <script>
+        var folhaAtual = 0;
+
+        // Mostra só a folha da vez e atualiza o "1 / 5"
+        function mostrarFolha() {
+            var folhas = document.querySelectorAll(".livro-folha");
+
+            for (var i = 0; i < folhas.length; i++) {
+                folhas[i].classList.remove("ativa");
+            }
+
+            folhas[folhaAtual].classList.add("ativa");
+            livro_contador.innerHTML = `${folhaAtual + 1} / ${folhas.length}`;
+        }
+
+        // direcao: 1 = próxima folha, -1 = folha anterior
+        function virarFolha(direcao) {
+            var total = document.querySelectorAll(".livro-folha").length;
+            folhaAtual += direcao;
+
+            if (folhaAtual < 0) {
+                folhaAtual = 0;
+            }
+            if (folhaAtual > total - 1) {
+                folhaAtual = total - 1;
+            }
+
+            mostrarFolha();
+        }
+    </script>
+</body>
+
+</html>

@@ -89,7 +89,7 @@
 
             <div class="quiz-botao">
                 <a href="./Quiz.html">Quero fazer o quiz →</a>
-                <p>6 perguntas · alguns minutinhos de carinho</p>
+                <p> 10 perguntas · alguns minutinhos de carinho</p>
             </div>
 
         </div>
@@ -127,6 +127,7 @@
         <div class="hist-mensagem" id="msg_historia"></div>
 
     </div>
+   <a href="./assets/imgs/pirilampoJanela.jpeg"></a>
 
 
 
@@ -197,23 +198,47 @@
                 titulo: "Dois olhinhos azuis que mudaram uma vida",
                 texto: "Luna foi encontrada em uma caixa de papelão, mas encontrou muito mais do que um lar: encontrou uma família e um amor que transformou os dias de quem a acolheu.", 
                 link: "./SiteHistoriaLuna.html"
+            },
+            {
+                nome: "Zeus", foto: "./assets/imgs/zeusMesa.jpeg",
+                titulo: "Um jeitinho único de conquistar corações",
+                texto: "Com seus olhos encantadores e personalidade marcante, Zeus conquistou um lugar especial na vida de sua família.", 
+                link: "./SiteHistoriaZeus.html"
+            },
+            {
+                nome: "Pirilampo", foto: "./assets/imgs/pirilampoJanela.jpeg",
+                titulo: "Trinta anos de amor e companhia",
+                texto: "Encontrado há 30 anos com a asa cortada, Pirilampo ganhou uma nova chance e, desde então, faz parte de uma família cheia de amor pelos animais.", 
+                link: "./SiteHistoriaPirilampo.html"
             }
         ];
 
         var favoritos = [];
-        var animalAberto = 0;
+var animalAberto = 0;
 
-        // Roda quando a página abre: lê os favoritos salvos e desenha tudo
-        function iniciar() {
-            var salvo = localStorage.getItem("favoritos");
-            if (salvo != null) {
-                favoritos = JSON.parse(salvo);
+// Roda quando a página abre: confere o login, busca os favoritos no banco e desenha tudo
+function iniciar() {
+    if (sessionStorage.ID_USUARIO == undefined) {
+        window.location = "TelaLogin.html";
+    } else {
+        desenharCards();
+        desenharFavoritos();
+        desenharHistorias();
+
+        fetch(`/interesses/listar/${sessionStorage.ID_USUARIO}`).then(function (resposta) {
+            if (resposta.status == 200) {
+                resposta.json().then(function (lista) {
+                    favoritos = [];
+                    for (var i = 0; i < lista.length; i++) {
+                        favoritos.push(lista[i].id);
+                    }
+                    desenharCards();
+                    desenharFavoritos();
+                });
             }
-            desenharCards();
-            desenharFavoritos();
-            desenharHistorias();
-        }
-
+        });
+    }
+}
         // Desenha um card para cada animal da lista
         function desenharCards() {
             lista_animais.innerHTML = "";
@@ -270,21 +295,28 @@
         }
 
         // Favoritar: se já está na lista, tira; se não está, coloca
-        function favoritar(idAnimal) {
-            var posicao = favoritos.indexOf(idAnimal);
+       // Favoritar: se já está na lista, tira; se não está, coloca. E avisa o banco.
+function favoritar(idAnimal) {
+    var posicao = favoritos.indexOf(idAnimal);
+    var rota = "/interesses/cadastrar";
 
-            if (posicao == -1) {
-                favoritos.push(idAnimal);
-            } else {
-                favoritos.splice(posicao, 1);
-            }
+    if (posicao == -1) {
+        favoritos.push(idAnimal);
+    } else {
+        favoritos.splice(posicao, 1);
+        rota = "/interesses/remover";
+    }
 
-            localStorage.setItem("favoritos", JSON.stringify(favoritos));
+    fetch(rota, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idAnimal: idAnimal, idUsuario: sessionStorage.ID_USUARIO })
+    });
 
-            desenharCards();
-            desenharFavoritos();
-            atualizarBotaoModal();
-        }
+    desenharCards();
+    desenharFavoritos();
+    atualizarBotaoModal();
+}
 
         // Muda o texto do botão do pop-up conforme o animal está favoritado ou não
         function atualizarBotaoModal() {
@@ -358,20 +390,32 @@
         }
 
         // Mostra a mensagem depois que a pessoa digita o e-mail
-        function enviarHistoria() {
-            var email = input_email_historia.value;
+        // A pessoa digita o e-mail e o pedido vai para o banco como "Em analise"
+function enviarHistoria() {
+    var email = input_email_historia.value;
 
-            if (email == "" || email.indexOf("@") == -1) {
-                msg_historia.className = "hist-mensagem erro";
-                msg_historia.innerHTML = "Digite um e-mail válido para eu poder entrar em contato.";
-            } else {
+    if (email == "" || email.indexOf("@") == -1) {
+        msg_historia.className = "hist-mensagem erro";
+        msg_historia.innerHTML = "Digite um e-mail válido para eu poder entrar em contato.";
+        msg_historia.style.display = "block";
+    } else {
+        fetch("/historias/solicitar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ idUsuario: sessionStorage.ID_USUARIO, email: email })
+        }).then(function (resposta) {
+            if (resposta.ok) {
                 msg_historia.className = "hist-mensagem";
                 msg_historia.innerHTML = `Obrigada! Vou entrar em contato pelo e-mail <b>${email}</b> para você poder contar a sua história para mim ♡`;
                 input_email_historia.value = "";
+            } else {
+                msg_historia.className = "hist-mensagem erro";
+                msg_historia.innerHTML = "Não foi possível enviar agora. Tente de novo.";
             }
-
             msg_historia.style.display = "block";
-        }
+        });
+    }
+}
 
         iniciar();
     </script>

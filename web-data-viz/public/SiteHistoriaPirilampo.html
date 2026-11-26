@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórias | Amora</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/imgs/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/SiteCliente.css">
+</head>
+
+<body>
+
+    <nav class="nav-site">
+        <div class="nav-logo">
+            <img src="./assets/imgs/LogoSiteCliente.png" alt="LogoSiteCliente">
+            <p>ENCONTROS QUE TRANSFORMAM VIDAS</p>
+        </div>
+
+        <div class="bt_sair">
+            <a href="./SiteCliente.html#historias">← Voltar às histórias</a>
+        </div>
+    </nav>
+
+    <div class="livro-fundo">
+
+        <div class="livro">
+
+            <!-- Folha 1: capa -->
+            <div class="livro-folha ativa">
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/pirilampoMadeira.jpeg" alt="Pirilampo">
+                </div>
+                <div class="livro-pagina livro-capa">
+                    <span class="livro-tag">♡ A história de Pirilampo</span>
+                    <h1>Um encontro inesperado, <span style="color: #df7a9c;">um amor para a vida toda</span></h1>
+                    <p class="livro-divisor">♡ · ♡ · ♡</p>
+                    <p class="livro-sub">Algumas passagens duram pouco, mas deixam marcas que ficam para sempre.</p>
+                </div>
+            </div>
+
+            <!-- Folha 2: texto + foto -->
+            <div class="livro-folha">
+                <div class="livro-pagina">
+                    <p class="livro-texto capitular">Há cerca de 30 anos, Pirilampo foi encontrado 
+                        com uma das asas cortadas. Precisando de cuidados, ele ganhou uma nova
+                         oportunidade quando chegou à nossa família, que decidiu acolhê-lo e 
+                         oferecer um lar cheio de carinho.</p>
+                </div>
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/pirilampoOlhando.jpeg" alt="Pirilampo olhando">
+                </div>
+            </div>
+
+            <!-- Folha 3: foto + texto -->
+            <div class="livro-folha">
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/pirilampoGaiola.jpeg" alt="Pirilampo Gaiola">
+                </div>
+                <div class="livro-pagina">
+                    <p class="livro-texto">Pirilampo não foi o único a encontrar uma segunda chance por
+                         aqui. Nossa casa também é lar de Paçoca, Pitaya e Atum, cada um com sua própria
+                          história de adoção. Todos chegaram precisando de algum tipo de cuidado, e 
+                          tivemos a oportunidade de fazer a diferença na vida de cada um.</p>
+                </div>
+            </div>
+
+            <!-- Folha 4: texto + foto -->
+            <div class="livro-folha">
+                <div class="livro-pagina">
+                    <p class="livro-texto">Hoje, depois de três décadas, não consigo imaginar minha 
+                        casa sem a presença do Pirilampo e dos outros animais.
+                         Brinquedos, pelos e penas já fazem parte da nossa rotina e das nossas 
+                         lembranças. Afinal, adotar não transforma apenas a vida de um animal, mas 
+                         também a de quem escolhe acolhê-lo.</p>
+                </div>
+                <div class="livro-pagina foto">
+                    <img src="./assets/imgs/pirilampoCossando.jpeg" alt="pirilampo Cossando">
+                </div>
+            </div>
+
+            <!-- Folha 5: lembranças + fim -->
+            <div class="livro-folha">
+                <div class="livro-pagina foto">
+                    <div class="livro-duplas">
+                        <img src="./assets/imgs/pirilampoOlhando.jpeg" alt="pirilampo olhando">
+                        <img src="./assets/imgs/pirilampoJanela.jpeg" alt="pirilampo Janela">
+                    </div>
+                </div>
+                <div class="livro-pagina livro-capa">
+                    <span class="livro-tag">♡ Fim</span>
+                    <h1>Obrigada, <span style="color: #df7a9c;">Pirilampo.</span></h1>
+                    <p class="livro-divisor">♡ · ♡ · ♡</p>
+                    <p class="livro-sub">Por cada dia, cada olhar e cada lembrança.</p>
+                    <div class="livro-voltar">
+                        <a href="./SiteCliente.html#historias">Ler outras histórias →</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="livro-controles">
+            <button onclick="virarFolha(-1)">‹ Anterior</button>
+            <span id="livro_contador">1 / 5</span>
+            <button onclick="virarFolha(1)">Próxima ›</button>
+        </div>
+
+    </div>
+
+    <script>
+        var folhaAtual = 0;
+
+        // Mostra só a folha da vez e atualiza o "1 / 5"
+        function mostrarFolha() {
+            var folhas = document.querySelectorAll(".livro-folha");
+
+            for (var i = 0; i < folhas.length; i++) {
+                folhas[i].classList.remove("ativa");
+            }
+
+            folhas[folhaAtual].classList.add("ativa");
+            livro_contador.innerHTML = `${folhaAtual + 1} / ${folhas.length}`;
+        }
+
+        // direcao: 1 = próxima folha, -1 = folha anterior
+        function virarFolha(direcao) {
+            var total = document.querySelectorAll(".livro-folha").length;
+            folhaAtual += direcao;
+
+            if (folhaAtual < 0) {
+                folhaAtual = 0;
+            }
+            if (folhaAtual > total - 1) {
+                folhaAtual = total - 1;
+            }
+
+            mostrarFolha();
+        }
+    </script>
+</body>
+
+</html>

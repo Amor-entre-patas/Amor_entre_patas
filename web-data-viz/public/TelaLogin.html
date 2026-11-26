@@ -58,50 +58,64 @@
             </div>
 
 
-        <div class="btn-finalizar" onclick="cadastrar()"><a href="./SiteCliente.html">Login</a></div>
+        <div class="btn-finalizar" onclick="validarLogin()"><a href="javascript:void(0)">Login</a></div>
 
 
         <div id="div_exibir"></div>
     </div>
 </body>
 <script>
+    function validarLogin() {
+        let tudoCerto = true;
+        let mensagem = '';
 
-function cadastrar() {
+        if (ipt_email.value == '') {
+            tudoCerto = false;
+            mensagem = 'Preencha o campo de e-mail!';
+            ipt_email.style.borderColor = '#E03131';
+        } else {
+            ipt_email.style.borderColor = '';
+        }
 
-    let tudoCerto = true;
-    let mensagem = '';
+        if (ipt_senha.value == '') {
+            tudoCerto = false;
+            mensagem = 'Preencha o campo de senha!';
+            ipt_senha.style.borderColor = '#E03131';
+        } else {
+            ipt_senha.style.borderColor = '';
+        }
 
-    if (ipt_email.value == '') {
-        tudoCerto = false;
-        mensagem = 'Preencha o campo de e-mail!';
-        ipt_email.style.borderColor = '#E03131';
-    } else {
-        ipt_email.style.borderColor = '';
+        if (ipt_email.value != '' && !ipt_email.value.includes('@')) {
+            tudoCerto = false;
+            mensagem = 'Insira um e-mail válido!';
+            ipt_email.style.borderColor = '#E03131';
+        }
+
+        if (tudoCerto == true) {
+            entrar();
+        } else {
+            div_exibir.innerHTML = mensagem;
+        }
     }
 
-  
-    if (ipt_senha.value == '') {
-        tudoCerto = false;
-        mensagem = 'Preencha o campo de senha!';
-        ipt_senha.style.borderColor = '#E03131';
-    } else {
-        ipt_senha.style.borderColor = '';
+    function entrar() {
+        fetch("/usuarios/autenticar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                emailServer: ipt_email.value,
+                senhaServer: ipt_senha.value
+            })
+        }).then(function (resposta) {
+            if (resposta.ok) {
+                resposta.json().then(function (json) {
+                    sessionStorage.ID_USUARIO = json.id;
+                    window.location = "SiteCliente.html";
+                });
+            } else {
+                div_exibir.innerHTML = "E-mail e/ou senha inválido(s).";
+            }
+        });
     }
-
-  
-    if (ipt_email.value != '' && !ipt_email.value.includes('@')) {
-        tudoCerto = false;
-        mensagem = 'Insira um e-mail válido!';
-        ipt_email.style.borderColor = '#E03131';
-    }
-
-
-    if (tudoCerto == true) {
-        div_exibir.innerHTML = 'Login validado com sucesso!';
-    } else {
-        div_exibir.innerHTML = mensagem;
-    }
-}
-
 </script>
 </html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amor entre patas - Sua dashboard</title>
+
+    <link rel="icon" type="image/svg+xml" href="./assets/imgs/favicon.svg">
+    <link rel="stylesheet" href="./css/quiz.css">
+    <link rel="stylesheet" href="./css/dashboards.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+
+<body class="dash-pagina" onload="carregarDash()">
+
+    <!-- Aparece quando o usuário ainda não fez o quiz -->
+    <div id="semDados" class="dash-sem-dados">
+        <h1 class="dash-titulo">Sua dashboard 🐾</h1>
+        <p>Você ainda não fez o quiz.</p>
+        <a class="quiz-botao" href="Quiz.html">Fazer o quiz</a>
+    </div>
+
+    <div id="conteudoDash" class="dash-tela">
+
+        <div class="dash-topo">
+            <h1 class="dash-titulo">Seu resultado</h1>
+            <span id="spanStatus" class="dash-status"></span>
+        </div>
+
+        <!-- Indicadores principais -->
+
+        <div class="dash-kpis">
+
+            <div class="dash-kpi">
+                <span class="dash-kpi-nome">Seu preparo geral</span>
+                <span id="kpiPreparoGeral" class="dash-kpi-valor"></span>
+                <span class="dash-kpi-descricao">Resultado do quiz</span>
+            </div>
+
+            <div class="dash-kpi">
+                <span class="dash-kpi-nome">Área de destaque</span>
+                <span id="kpiMaisForte" class="dash-kpi-valor"></span>
+                <span class="dash-kpi-descricao">Sua maior pontuação</span>
+            </div>
+
+            <div class="dash-kpi">
+                <span class="dash-kpi-nome">Atenção necessária</span>
+                <span id="kpiMaisFraca" class="dash-kpi-valor"></span>
+                <span class="dash-kpi-descricao">Área com menor pontuação</span>
+            </div>
+
+            <div class="dash-kpi">
+                <span class="dash-kpi-nome">Você x média</span>
+                <span id="kpiVsMedia" class="dash-kpi-valor"></span>
+                <span class="dash-kpi-descricao">Comparação com outros usuários</span>
+            </div>
+
+        </div>
+
+
+        <!-- Gráficos -->
+        <div class="dash-grade">
+
+            <div class="dash-card">
+                <h3 class="dash-card-titulo">Preparo geral</h3>
+                <div class="dash-grafico">
+                    <canvas id="graficoGeral"></canvas>
+                    <span id="spanPorcentagemDash" class="dash-centro"></span>
+                </div>
+            </div>
+
+            <div class="dash-card">
+                <h3 class="dash-card-titulo">Preparo por área</h3>
+                <div class="dash-grafico">
+                    <canvas id="graficoCategorias"></canvas>
+                </div>
+            </div>
+
+            <div class="dash-card">
+                <h3 class="dash-card-titulo">Você x média</h3>
+                <div class="dash-grafico">
+                    <canvas id="graficoComparacao"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Áreas que precisam de atenção -->
+        <div id="dashAtencao" class="dash-atencao"></div>
+
+        <div class="dash-botoes">
+            <a class="quiz-botao quiz-botao-secundario" href="Quiz.html">Refazer o quiz</a>
+            <a class="quiz-botao" href="SiteCliente.html">Voltar para o site</a>
+        </div>
+
+    </div>
+
+</body>
+
+    <script>
+
+        // Média dos usuários por área (%). Vem do banco, pela API
+        var mediaDosUsuarios = {}
+
+        function carregarDash() {
+
+            conteudoDash.style.display = "none"
+            semDados.style.display = "none"
+
+            if (sessionStorage.ID_USUARIO == undefined) {
+                window.location = "TelaLogin.html"
+            } else {
+                fetch(`/resultados/${sessionStorage.ID_USUARIO}`).then(function (resposta) {
+                    if (resposta.status == 200) {
+                        resposta.json().then(function (linhas) {
+                            prepararDash(linhas)
+                        })
+                    } else {
+                        semDados.style.display = "flex"
+                    }
+                })
+            }
+        }
+
+        // Transforma o que veio do banco no formato que a dash usa
+        function prepararDash(linhas) {
+
+            const categorias = []
+            const dicas = []
+            let total = 0
+            let maximo = 0
+            let temCategoriaBaixa = false
+
+            for (let i = 0; i < linhas.length; i++) {
+                const pontos = Number(linhas[i].pontuacao)
+                const maxima = Number(linhas[i].maxima)
+                const media = Number(linhas[i].media)
+                const nome = linhas[i].categoria
+
+                total += pontos
+                maximo += maxima
+
+                categorias.push({ nome: nome, porcentagem: Math.round((pontos / maxima) * 100) })
+                mediaDosUsuarios[nome] = Math.round((media / maxima) * 100)
+
+                // mesma regra do quiz: abaixo de 60% na área é ponto de atenção
+                if (pontos / maxima < 0.6) {
+                    temCategoriaBaixa = true
+                    dicas.push({ nome: nome })
+                }
+            }
+
+            const porcentagemGeral = total / maximo
+
+            const dados = {
+                porcentagemGeral: Math.round(porcentagemGeral * 100),
+                // mesma regra do quiz: 75% no total e nenhuma área baixa
+                estaPronto: porcentagemGeral >= 0.75 && temCategoriaBaixa == false,
+                categorias: categorias,
+                dicas: dicas
+            }
+
+            semDados.style.display = "none"
+            conteudoDash.style.display = "flex"
+
+            montarStatus(dados)
+            montarKpis(dados)
+            montarGraficoGeral(dados)
+            montarGraficoCategorias(dados)
+            montarGraficoComparacao(dados)
+            montarAtencao(dados)
+        }
+
+        // Preenche os quatro indicadores
+        function montarKpis(dados) {
+
+            // Resultado geral do quiz
+            kpiPreparoGeral.innerHTML = dados.porcentagemGeral + "%"
+
+            // Área com maior e menor pontuação
+            let maisForte = dados.categorias[0]
+            let maisFraca = dados.categorias[0]
+
+            for (let i = 1; i < dados.categorias.length; i++) {
+
+                if (dados.categorias[i].porcentagem > maisForte.porcentagem) {
+                    maisForte = dados.categorias[i]
+                }
+
+                if (dados.categorias[i].porcentagem < maisFraca.porcentagem) {
+                    maisFraca = dados.categorias[i]
+                }
+            }
+
+            kpiMaisForte.innerHTML = maisForte.nome + " " + maisForte.porcentagem + "%"
+            kpiMaisFraca.innerHTML = maisFraca.nome + " " + maisFraca.porcentagem + "%"
+
+            // Comparação entre você e a média dos usuários
+            let somaMedias = 0
+
+            for (let i = 0; i < dados.categorias.length; i++) {
+                somaMedias += mediaDosUsuarios[dados.categorias[i].nome]
+            }
+
+            const mediaGeral = Math.round(somaMedias / dados.categorias.length)
+            const diferenca = dados.porcentagemGeral - mediaGeral
+
+            if (diferenca > 0) {
+                kpiVsMedia.innerHTML = "+" + diferenca + " pts"
+            } else {
+                kpiVsMedia.innerHTML = diferenca + " pts"
+            }
+        }
+
+        // Status de preparo
+        function montarStatus(dados) {
+
+            spanStatus.classList.remove("dash-status-ok", "dash-status-atencao")
+
+            if (dados.estaPronto) {
+                spanStatus.innerHTML = "Pronto para adotar"
+                spanStatus.classList.add("dash-status-ok")
+
+            } else {
+                spanStatus.innerHTML = "Ainda não está pronto"
+                spanStatus.classList.add("dash-status-atencao")
+            }
+        }
+
+        // Gráfico 1: preparo geral
+        function montarGraficoGeral(dados) {
+
+            spanPorcentagemDash.innerHTML = dados.porcentagemGeral + "%"
+
+            new Chart(graficoGeral, {
+                type: "doughnut",
+
+                data: {
+                    labels: ["Preparo", "Falta melhorar"],
+
+                    datasets: [{
+                        data: [
+                            dados.porcentagemGeral,
+                            100 - dados.porcentagemGeral
+                        ],
+                        backgroundColor: ["#974263", "#e8d5dc"],
+                        borderWidth: 0
+                    }]
+                },
+
+                options: {
+                    maintainAspectRatio: false,
+                    cutout: "70%",
+
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            })
+        }
+
+        // Gráfico 2: preparo por categoria
+        function montarGraficoCategorias(dados) {
+
+            const nomes = []
+            const valores = []
+
+            for (let i = 0; i < dados.categorias.length; i++) {
+                nomes.push(dados.categorias[i].nome)
+                valores.push(dados.categorias[i].porcentagem)
+            }
+
+            new Chart(graficoCategorias, {
+                type: "radar",
+
+                data: {
+                    labels: nomes,
+
+                    datasets: [{
+                        label: "Preparo (%)",
+                        data: valores,
+                        backgroundColor: "rgba(151, 66, 99, 0.25)",
+                        borderColor: "#974263",
+                        pointBackgroundColor: "#974263"
+                    }]
+                },
+
+                options: {
+                    maintainAspectRatio: false,
+
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 100,
+                            ticks: {
+                                stepSize: 25,
+                                display: false
+                            }
+                        }
+                    },
+
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            })
+        }
+
+        // Gráfico 3: comparação com a média
+        function montarGraficoComparacao(dados) {
+
+            const nomes = []
+            const valoresVoce = []
+            const valoresMedia = []
+
+            for (let i = 0; i < dados.categorias.length; i++) {
+
+                nomes.push(dados.categorias[i].nome)
+                valoresVoce.push(dados.categorias[i].porcentagem)
+                valoresMedia.push(mediaDosUsuarios[dados.categorias[i].nome])
+            }
+
+            new Chart(graficoComparacao, {
+                type: "bar",
+
+                data: {
+                    labels: nomes,
+
+                    datasets: [
+                        {
+                            label: "Você",
+                            data: valoresVoce,
+                            backgroundColor: "#974263"
+                        },
+                        {
+                            label: "Média",
+                            data: valoresMedia,
+                            backgroundColor: "#d9a7bb"
+                        }
+                    ]
+                },
+
+                options: {
+                    maintainAspectRatio: false,
+
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 100,
+                            ticks: {
+                                stepSize: 25
+                            }
+                        },
+
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    },
+
+                    plugins: {
+                        legend: {
+                            position: "bottom"
+                        }
+                    }
+                }
+            })
+        }
+
+        // Áreas que precisam melhorar
+        function montarAtencao(dados) {
+
+            if (dados.dicas.length == 0) {
+
+                dashAtencao.innerHTML =
+                    "<span class='dash-etiqueta dash-etiqueta-ok'>Todas as áreas estão boas</span>"
+
+            } else {
+
+                let html = "<span class='dash-atencao-texto'>Melhorar:</span>"
+
+                for (let i = 0; i < dados.dicas.length; i++) {
+                    html += "<span class='dash-etiqueta'>" + dados.dicas[i].nome + "</span>"
+                }
+
+                dashAtencao.innerHTML = html
+            }
+        }
+
+    </script>
+</html>

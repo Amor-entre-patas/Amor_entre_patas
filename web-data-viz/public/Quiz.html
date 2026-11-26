@@ -40,22 +40,24 @@
 
             <div class="quiz-opcoes">
                 <div class="quiz-opcao-linha">
-                    <input type="radio" id="primeiraOpcao" name="option" class="quiz-radio" value="alternativaA">
+                    <input type="radio" id="primeiraOpcao" name="option" class="quiz-radio" value="A">
                     <label for="primeiraOpcao" id="labelOpcaoUm" class="quiz-opcao"></label>
                 </div>
                 <div class="quiz-opcao-linha">
-                    <input type="radio" id="segundaOpcao" name="option" class="quiz-radio" value="alternativaB">
+                    <input type="radio" id="segundaOpcao" name="option" class="quiz-radio" value="B">
                     <label for="segundaOpcao" id="labelOpcaoDois" class="quiz-opcao"></label>
                 </div>
                 <div class="quiz-opcao-linha">
-                    <input type="radio" id="terceiraOpcao" name="option" class="quiz-radio" value="alternativaC">
+                    <input type="radio" id="terceiraOpcao" name="option" class="quiz-radio" value="C">
                     <label for="terceiraOpcao" id="labelOpcaoTres" class="quiz-opcao"></label>
                 </div>
                 <div class="quiz-opcao-linha">
-                    <input type="radio" id="quartaOpcao" name="option" class="quiz-radio" value="alternativaD">
+                    <input type="radio" id="quartaOpcao" name="option" class="quiz-radio" value="D">
                     <label for="quartaOpcao" id="labelOpcaoQuatro" class="quiz-opcao"></label>
                 </div>
             </div>
+
+            <div id="divErro" class="quiz-erro"></div>
 
             <div class="quiz-botoes">
                 <button id="btnProx" class="quiz-botao" onclick="avancar()">Próxima pergunta</button>
@@ -76,213 +78,327 @@
 
             <p id="resultadoTexto" class="quiz-resultado-texto"></p>
 
+            <div id="divSalvar"></div>
             <div class="quiz-botoes">
+                <a class="quiz-botao" href="Dashboard.html">Ver minha dashboard</a>
                 <a id="linkAdotar" class="quiz-botao" href="SiteCliente.html">Conhecer os animais para adoção</a>
                 <button class="quiz-botao quiz-botao-secundario" onclick="tentarNovamente()">Refazer o quiz</button>
             </div>
         </div>
 
     </div>
+
+    
+
+    <script>
+        // Cada pergunta tem uma categoria e cada alternativa vale uma nota (10 = mais preparado, 1 = menos).
+        // As alternativas estão fora de ordem de propósito, para a melhor não ficar sempre no mesmo lugar.
+        // O usuário não vê as notas durante o quiz.
+        const listaDeQuestoes = [
+
+            {
+                categoria: "Tempo",
+                pergunta: "Quantas vezes por semana você consegue passear com o animal?",
+                alternativaA: "1 vez por semana ou menos", notaA: 1,
+                alternativaB: "2 a 3 vezes por semana", notaB: 4,
+                alternativaC: "Todos os dias", notaC: 10,
+                alternativaD: "4 a 5 vezes por semana", notaD: 7
+            },
+
+            {
+                categoria: "Tempo",
+                pergunta: "Quanto tempo por dia você passa em casa com ele?",
+                alternativaA: "De 2 a 4 horas", notaA: 4,
+                alternativaB: "Mais de 6 horas", notaB: 10,
+                alternativaC: "Menos de 2 horas", notaC: 1,
+                alternativaD: "De 4 a 6 horas", notaD: 7
+            },
+
+            {
+                categoria: "Custo",
+                pergunta: "Quanto você consegue reservar por mês para ração, banho e cuidados do dia a dia?",
+                alternativaA: "Só o básico", notaA: 4,
+                alternativaB: "Ainda não calculei", notaB: 1,
+                alternativaC: "O suficiente, mas apertado", notaC: 7,
+                alternativaD: "O suficiente, com folga", notaD: 10
+            },
+
+            {
+                categoria: "Custo",
+                pergunta: "Se ele ficar doente, como você lidaria com a consulta e o tratamento?",
+                alternativaA: "Dependeria da ajuda de familiares", notaA: 4,
+                alternativaB: "Tenho uma reserva ou plano para isso", notaB: 10,
+                alternativaC: "Não teria como pagar agora", notaC: 1,
+                alternativaD: "Conseguiria pagar parcelando", notaD: 7
+            },
+
+            {
+                categoria: "Espaço",
+                pergunta: "Como é o lugar onde ele vai morar?",
+                alternativaA: "Apartamento pequeno, sem telas nas janelas", notaA: 1,
+                alternativaB: "Casa com quintal e área segura", notaB: 10,
+                alternativaC: "Apartamento grande, com telas nas janelas", notaC: 7,
+                alternativaD: "Apartamento pequeno, com telas nas janelas", notaD: 4
+            },
+
+            {
+                categoria: "Espaço",
+                pergunta: "Onde ele vai dormir e descansar?",
+                alternativaA: "Em uma área externa coberta", notaA: 4,
+                alternativaB: "Em um espaço compartilhado dentro de casa", notaB: 7,
+                alternativaC: "Ainda não decidi", notaC: 1,
+                alternativaD: "Em um cantinho só dele, dentro de casa", notaD: 10
+            },
+
+            {
+                categoria: "Responsabilidade",
+                pergunta: "Quem vai cuidar dele no dia a dia?",
+                alternativaA: "Eu sozinho(a)", notaA: 7,
+                alternativaB: "Dividido com a família, mas sem combinar tarefas", notaB: 4,
+                alternativaC: "Eu, com ajuda combinada da família", notaC: 10,
+                alternativaD: "Ainda não definimos", notaD: 1
+            },
+
+            {
+                categoria: "Responsabilidade",
+                pergunta: "Se você precisar viajar por alguns dias, o que acontece com ele?",
+                alternativaA: "Pediria a algum conhecido na hora", notaA: 7,
+                alternativaB: "Nunca pensei nisso", notaB: 1,
+                alternativaC: "Já tenho alguém de confiança ou um hotelzinho em mente", notaC: 10,
+                alternativaD: "Levaria comigo, se desse", notaD: 4
+            },
+
+            {
+                categoria: "Preparo",
+                pergunta: "Você já pesquisou sobre o porte do animal e a rotina de cuidados dele?",
+                alternativaA: "Pesquisei um pouco", notaA: 4,
+                alternativaB: "Sim, e conversei com a ONG", notaB: 10,
+                alternativaC: "Ainda não pesquisei", notaC: 1,
+                alternativaD: "Pesquisei bastante", notaD: 7
+            },
+
+            {
+                categoria: "Preparo",
+                pergunta: "Cães e gatos podem viver de 10 a 20 anos. Como você se sente quanto a isso?",
+                alternativaA: "Estou ciente e disposto(a)", notaA: 7,
+                alternativaB: "Não tinha pensado nisso", notaB: 1,
+                alternativaC: "Preciso pensar melhor", notaC: 4,
+                alternativaD: "Já me planejei para esse tempo todo", notaD: 10
+            }
+
+        ]
+
+        // lista de categorias (na ordem em que aparecem na dashboard)
+        const listaDeCategorias = ["Tempo", "Custo", "Espaço", "Responsabilidade", "Preparo"]
+
+        // frase que aparece na dashboard quando a categoria está baixa
+        const dicasPorCategoria = {
+            "Tempo": "Você precisa de mais tempo para passear e ficar com ele. Veja se dá para encaixar o animal na sua rotina.",
+            "Custo": "Falta organizar o dinheiro. Calcule os gastos do mês e crie uma reserva para emergências.",
+            "Espaço": "O lugar onde ele vai morar precisa ficar mais seguro e confortável. Telas nas janelas e um cantinho só dele ajudam muito.",
+            "Responsabilidade": "Combine com a família quem faz o quê e pense em quem cuida dele quando você viajar.",
+            "Preparo": "Pesquise mais sobre o animal e converse com a ONG antes de adotar. Ele vai ficar com você por muitos anos."
+        }
+
+        // porcentagem mínima total para ser considerado pronto
+        const porcentagemMinima = 0.75
+
+        // porcentagem mínima em cada categoria (abaixo disso aparece como "ponto de atenção")
+        const porcentagemMinimaCategoria = 0.6
+
+        // variáveis globais
+        let numeroDaQuestaoAtual = 0
+        const respostasDoUsuario = [] // guarda a letra escolhida em cada questão (A, B, C ou D)
+        const quantidadeDeQuestoes = listaDeQuestoes.length
+
+        function onloadEsconder() {
+            jogo.style.display = "none"
+            resultado.style.display = "none"
+            qtdPerguntasInicio.innerHTML = quantidadeDeQuestoes
+        }
+
+        function iniciarQuiz() {
+            telaInicial.style.display = "none"
+            jogo.style.display = "flex"
+
+            qtdQuestoes.innerHTML = quantidadeDeQuestoes
+
+            preencherHTMLcomQuestaoAtual(0)
+        }
+
+        function preencherHTMLcomQuestaoAtual(index) {
+            const questaoAtual = listaDeQuestoes[index]
+            numeroDaQuestaoAtual = index
+
+            desmarcarRadioButtons()
+
+            spanNumeroDaQuestaoAtual.innerHTML = index + 1 // ajustando porque o index começa em 0
+            barraPreenchida.style.width = (index / quantidadeDeQuestoes) * 100 + "%"
+
+            spanQuestaoExibida.innerHTML = questaoAtual.pergunta
+            labelOpcaoUm.innerHTML = questaoAtual.alternativaA
+            labelOpcaoDois.innerHTML = questaoAtual.alternativaB
+            labelOpcaoTres.innerHTML = questaoAtual.alternativaC
+            labelOpcaoQuatro.innerHTML = questaoAtual.alternativaD
+
+            if (index == quantidadeDeQuestoes - 1) {
+                btnProx.innerHTML = "Ver resultado"
+            } else {
+                btnProx.innerHTML = "Próxima pergunta"
+            }
+        }
+
+        function avancar() {
+            const options = document.getElementsByName("option") // recupera alternativas no html
+
+            let escolhida = null
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].checked) {
+                    escolhida = options[i].value
+                    break
+                }
+            }
+
+            if (escolhida == null) {
+                divErro.innerHTML = "Escolha uma opção para continuar."
+            } else {
+                divErro.innerHTML = ""
+
+                // só guarda a resposta, não mostra se está certa ou errada
+                respostasDoUsuario[numeroDaQuestaoAtual] = escolhida
+
+                if (numeroDaQuestaoAtual < quantidadeDeQuestoes - 1) {
+                    preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual + 1)
+                } else {
+                    finalizarJogo()
+                }
+            }
+        }
+
+        function desmarcarRadioButtons() {
+            const options = document.getElementsByName("option")
+            for (let i = 0; i < options.length; i++) {
+                options[i].checked = false
+            }
+        }
+
+        function finalizarJogo() {
+            // somas de nota por categoria (nota recebida e nota máxima possível)
+            const notaPorCategoria = {}
+            const maximoPorCategoria = {}
+            for (let i = 0; i < listaDeCategorias.length; i++) {
+                notaPorCategoria[listaDeCategorias[i]] = 0
+                maximoPorCategoria[listaDeCategorias[i]] = 0
+            }
+
+            let notaTotal = 0
+            const notasPorPergunta = [] // usada no gráfico de barras da dash
+            for (let i = 0; i < quantidadeDeQuestoes; i++) {
+                const questao = listaDeQuestoes[i]
+                const letra = respostasDoUsuario[i] // A, B, C ou D
+                const nota = questao["nota" + letra]
+
+                notaTotal += nota
+                notaPorCategoria[questao.categoria] += nota
+                maximoPorCategoria[questao.categoria] += 10
+
+                notasPorPergunta.push({ nome: "P" + (i + 1) + " " + questao.categoria, nota: nota })
+            }
+
+            const porcentagemDePreparo = notaTotal / (quantidadeDeQuestoes * 10)
+            const porcentagemArredondada = Math.round(porcentagemDePreparo * 100)
+
+            // porcentagem por categoria e dicas das categorias baixas (usadas na dash)
+            const categoriasDaDash = []
+            const dicasDaDash = []
+            let temCategoriaBaixa = false
+
+            for (let i = 0; i < listaDeCategorias.length; i++) {
+                const nome = listaDeCategorias[i]
+                const porcentagemCategoria = notaPorCategoria[nome] / maximoPorCategoria[nome]
+
+                categoriasDaDash.push({ nome: nome, porcentagem: Math.round(porcentagemCategoria * 100) })
+
+                if (porcentagemCategoria < porcentagemMinimaCategoria) {
+                    temCategoriaBaixa = true
+                    dicasDaDash.push({ nome: nome, texto: dicasPorCategoria[nome] })
+                }
+            }
+
+            // está pronto se a nota total é boa e nenhuma categoria ficou baixa
+            const estaPronto = porcentagemDePreparo >= porcentagemMinima && temCategoriaBaixa == false
+
+            // guarda para a página Dashboard.html (por enquanto no navegador; depois vem da API)
+            const dadosDaDash = {
+                porcentagemGeral: porcentagemArredondada,
+                estaPronto: estaPronto,
+                categorias: categoriasDaDash,
+                perguntas: notasPorPergunta,
+                dicas: dicasDaDash
+            }
+            sessionStorage.setItem("dadosDaDash", JSON.stringify(dadosDaDash))
+
+            jogo.style.display = "none"
+            resultado.style.display = "flex"
+
+            spanPorcentagem.innerHTML = porcentagemArredondada
+            barraPreparo.style.width = porcentagemArredondada + "%"
+
+            if (estaPronto) {
+                resultado.classList.add("quiz-pronto")
+                resultadoEmoji.innerHTML = "🐶❤️🐱"
+                resultadoTitulo.innerHTML = "Você está pronto para adotar!"
+                resultadoTexto.innerHTML =
+                    "Suas respostas mostram que você entende que adotar é um compromisso para a vida toda. " +
+                    "Agora é só encontrar o amigo que combina com você."
+                linkAdotar.style.display = "block"
+            } else {
+                resultado.classList.add("quiz-nao-pronto")
+                resultadoEmoji.innerHTML = "🤔"
+                resultadoTitulo.innerHTML = "Ainda não é a hora de adotar"
+                resultadoTexto.innerHTML =
+                    "De acordo com as suas respostas, ainda falta melhorar alguns pontos. Veja quais são na sua dashboard. " +
+                    "Isso não é ruim: pensar antes evita sofrimento para você e para o bichinho. " +
+                    "Enquanto isso, você pode ajudar de outras formas, como sendo lar temporário, doando ração ou divulgando animais para adoção."
+                linkAdotar.style.display = "none"
+            }
+
+           
+
+                        // manda o resultado para a API
+            if (sessionStorage.ID_USUARIO == undefined) {
+                divSalvar.innerHTML = "Entre na sua conta para salvar o resultado e ver a dashboard."
+            } else {
+                // transforma a letra escolhida (A, B, C, D) no id da alternativa no banco
+                const idsAlternativas = []
+                for (let i = 0; i < quantidadeDeQuestoes; i++) {
+                    const posicaoDaLetra = "ABCD".indexOf(respostasDoUsuario[i])
+                    idsAlternativas.push(i * 4 + posicaoDaLetra + 1)
+                }
+
+                fetch("/resultados/cadastrar", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        idUsuario: sessionStorage.ID_USUARIO,
+                        respostas: idsAlternativas
+                    })
+                }).then(function (resposta) {
+                    if (resposta.ok) {
+                        divSalvar.innerHTML = "Resultado salvo!"
+                    } else {
+                        divSalvar.innerHTML = "Não foi possível salvar o resultado."
+                    }
+                })
+            }
+        }
+
+        function tentarNovamente() {
+            // atualiza a página
+            window.location.reload()
+        }
+
+    </script>
 </body>
 
 </html>
-<script>
-    // alternativaIdeal = a resposta que indica uma adoção consciente (o usuário não vê isso durante o quiz)
-    const listaDeQuestoes = [
-
-        {
-            pergunta: "Quanto tempo livre você tem por dia para passear, brincar e dar atenção ao animal?",
-            alternativaA: "Quase nenhum, mas ele pode ficar sozinho o dia todo",
-            alternativaB: "Uma ou duas horas por dia, de forma fixa na rotina",
-            alternativaC: "Só nos finais de semana",
-            alternativaD: "Ainda não pensei nisso",
-            alternativaIdeal: "alternativaB"
-        },
-
-        {
-            pergunta: "Todas as pessoas que moram com você concordam com a adoção?",
-            alternativaA: "Sim, conversamos e todos estão de acordo",
-            alternativaB: "Eu quero, o resto da casa vai se acostumar",
-            alternativaC: "Vai ser uma surpresa para a família",
-            alternativaD: "Moro com outras pessoas, mas não perguntei",
-            alternativaIdeal: "alternativaA"
-        },
-
-        {
-            pergunta: "Você sabe quanto custa manter um pet por mês (ração, vacinas, vermífugo, veterinário)?",
-            alternativaA: "Não gasta quase nada, ele come as sobras",
-            alternativaB: "Só preciso comprar ração e pronto",
-            alternativaC: "Sim, e já separei um valor mensal, inclusive para emergências",
-            alternativaD: "Se ficar doente eu vejo o que faço",
-            alternativaIdeal: "alternativaC"
-        },
-
-        {
-            pergunta: "Cães e gatos podem viver de 10 a 20 anos. Você está disposto a cuidar dele por todo esse tempo?",
-            alternativaA: "Sim, ele será parte da minha família até o fim",
-            alternativaB: "Enquanto ele for filhote e estiver fofinho",
-            alternativaC: "Até eu me mudar ou ter outros planos",
-            alternativaD: "Se der muito trabalho, devolvo",
-            alternativaIdeal: "alternativaA"
-        },
-
-        {
-            pergunta: "Se você precisar mudar de casa ou cidade, o que acontece com o animal?",
-            alternativaA: "Eu o deixo com algum conhecido",
-            alternativaB: "Ele vai comigo, vou procurar moradia que aceite pets",
-            alternativaC: "Procuro outro lar para ele",
-            alternativaD: "Ainda não pensei nisso",
-            alternativaIdeal: "alternativaB"
-        },
-
-        {
-            pergunta: "Seu novo pet pode arranhar móveis, fazer xixi fora do lugar e estranhar a casa no começo. Como você reage?",
-            alternativaA: "Ensino com paciência, carinho e, se precisar, peço ajuda de um profissional",
-            alternativaB: "Dou bronca ou castigo físico até ele aprender",
-            alternativaC: "Prefiro um animal que já venha 'pronto'",
-            alternativaD: "Devolvo se ele estragar alguma coisa",
-            alternativaIdeal: "alternativaA"
-        },
-
-        {
-            pergunta: "O que você pensa sobre vacinação, vermifugação e castração?",
-            alternativaA: "São caros e desnecessários",
-            alternativaB: "Só levo ao veterinário se ele ficar doente",
-            alternativaC: "É melhor deixar ele ter filhotes pelo menos uma vez",
-            alternativaD: "São parte essencial dos cuidados e da saúde dele",
-            alternativaIdeal: "alternativaD"
-        },
-
-        {
-            pergunta: "Quando você viajar ou ficar fora por alguns dias, quem cuidará do animal?",
-            alternativaA: "Deixo comida e água sobrando e ele se vira",
-            alternativaB: "Já tenho alguém de confiança, hotelzinho ou pet sitter em mente",
-            alternativaC: "Vou levar para a rua para ele se virar",
-            alternativaD: "Nunca viajo, então não preciso me preocupar",
-            alternativaIdeal: "alternativaB"
-        }
-
-    ]
-
-    // porcentagem mínima de preparo para ser considerado pronto
-    const porcentagemMinima = 0.75
-
-    // variáveis globais
-    let numeroDaQuestaoAtual = 0
-    const respostasDoUsuario = [] // guarda a alternativa escolhida em cada questão
-    const quantidadeDeQuestoes = listaDeQuestoes.length
-
-    function onloadEsconder() {
-        jogo.style.display = "none"
-        resultado.style.display = "none"
-        qtdPerguntasInicio.innerHTML = quantidadeDeQuestoes
-    }
-
-    function iniciarQuiz() {
-        telaInicial.style.display = "none"
-        jogo.style.display = "flex"
-
-        qtdQuestoes.innerHTML = quantidadeDeQuestoes
-
-        preencherHTMLcomQuestaoAtual(0)
-    }
-
-    function preencherHTMLcomQuestaoAtual(index) {
-        const questaoAtual = listaDeQuestoes[index]
-        numeroDaQuestaoAtual = index
-
-        desmarcarRadioButtons()
-
-        spanNumeroDaQuestaoAtual.innerHTML = index + 1 // ajustando porque o index começa em 0
-        barraPreenchida.style.width = (index / quantidadeDeQuestoes) * 100 + "%"
-
-        spanQuestaoExibida.innerHTML = questaoAtual.pergunta
-        labelOpcaoUm.innerHTML = questaoAtual.alternativaA
-        labelOpcaoDois.innerHTML = questaoAtual.alternativaB
-        labelOpcaoTres.innerHTML = questaoAtual.alternativaC
-        labelOpcaoQuatro.innerHTML = questaoAtual.alternativaD
-
-        if (index == quantidadeDeQuestoes - 1) {
-            btnProx.innerHTML = "Ver resultado"
-        } else {
-            btnProx.innerHTML = "Próxima pergunta"
-        }
-    }
-
-    function avancar() {
-        const options = document.getElementsByName("option") // recupera alternativas no html
-
-        let escolhida = null
-        for (let i = 0; i < options.length; i++) {
-            if (options[i].checked) {
-                escolhida = options[i].value
-                break
-            }
-        }
-
-        if (escolhida == null) {
-            alert("Não há alternativas escolhidas. Escolha uma opção.")
-        } else {
-            // só guarda a resposta, não mostra se está certa ou errada
-            respostasDoUsuario[numeroDaQuestaoAtual] = escolhida
-
-            if (numeroDaQuestaoAtual < quantidadeDeQuestoes - 1) {
-                preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual + 1)
-            } else {
-                finalizarJogo()
-            }
-        }
-    }
-
-    function desmarcarRadioButtons() {
-        const options = document.getElementsByName("option")
-        for (let i = 0; i < options.length; i++) {
-            options[i].checked = false
-        }
-    }
-
-    function finalizarJogo() {
-        // confere todas as respostas guardadas
-        let pontuacao = 0
-        for (let i = 0; i < quantidadeDeQuestoes; i++) {
-            if (respostasDoUsuario[i] === listaDeQuestoes[i].alternativaIdeal) {
-                pontuacao++
-            }
-        }
-
-        const porcentagemDePreparo = pontuacao / quantidadeDeQuestoes
-        const estaPronto = porcentagemDePreparo >= porcentagemMinima
-        const porcentagemArredondada = Math.round(porcentagemDePreparo * 100)
-
-        jogo.style.display = "none"
-        resultado.style.display = "flex"
-
-        spanPorcentagem.innerHTML = porcentagemArredondada
-        barraPreparo.style.width = porcentagemArredondada + "%"
-
-        if (estaPronto) {
-            resultado.classList.add("quiz-pronto")
-            resultadoEmoji.innerHTML = "🐶❤️🐱"
-            resultadoTitulo.innerHTML = "Você está pronto para adotar!"
-            resultadoTexto.innerHTML =
-                "Suas respostas mostram que você entende que adotar é um compromisso para a vida toda. " +
-                "Agora é só encontrar o amigo que combina com você."
-            linkAdotar.style.display = "block"
-        } else {
-            resultado.classList.add("quiz-nao-pronto")
-            resultadoEmoji.innerHTML = "🤔"
-            resultadoTitulo.innerHTML = "Ainda não é a hora de adotar"
-            resultadoTexto.innerHTML =
-                "Algumas respostas mostram que ainda faltam cuidados importantes antes de trazer um animal para casa. " +
-                "Isso não é ruim: pensar antes evita sofrimento para você e para o bichinho. " +
-                "Converse com a família, organize sua rotina e suas finanças e tente de novo quando estiver mais preparado. " +
-                "Enquanto isso, você pode ajudar de outras formas, como sendo lar temporário, doando ração ou divulgando animais para adoção."
-            linkAdotar.style.display = "none"
-        }
-    }
-
-    function tentarNovamente() {
-        // atualiza a página
-        window.location.reload()
-    }
-</script>

@@ -2,7 +2,8 @@ var database = require("../database/config");
 
 function autenticar(email, senha) {
     var instrucaoSql = `
-        SELECT id_usuario AS id, nome, email, cpf FROM usuario WHERE email = '${email}' AND senha = '${senha}';
+        SELECT id_usuario AS id, nome, email, cpf FROM Usuario
+        WHERE email = '${email}' AND senha_hash = SHA1('${senha}');
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
@@ -10,8 +11,8 @@ function autenticar(email, senha) {
 
 function cadastrar(nome, cpf, email, senha) {
     var instrucaoSql = `
-        INSERT INTO usuario (nome, cpf, email, senha, dt_cadastro)
-        VALUES ('${nome}', '${cpf}', '${email}', '${senha}', CURDATE());
+        INSERT INTO Usuario (nome, cpf, email, senha_hash, dt_cadastro)
+        VALUES ('${nome}', '${cpf}', '${email}', SHA1('${senha}'), CURDATE());
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
