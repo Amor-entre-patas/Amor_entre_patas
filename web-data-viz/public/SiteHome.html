@@ -100,8 +100,8 @@
 
             <div class="bt_preparacao">
                 <a href="#adocao">Saiba como se preparar</a>
+            </div>
         </div>
-    </div>
     </div>
 
     <hr class="linha-dupla3">
@@ -246,16 +246,16 @@
             <img src="./assets/imgs/logoRodape1.png" alt="Logo Amor entre patas">
         </div>
 
-       <div class="rodape-conteudo">
-    <p class="rodape-texto">Adotar é um gesto de amor que dura a vida inteira.</p>
+        <div class="rodape-conteudo">
+            <p class="rodape-texto">Adotar é um gesto de amor que dura a vida inteira.</p>
 
-    <div class="rodape-links">
-        <a href="#inicio">Início</a>
-        <a href="#sobre">Sobre o projeto</a>
-        <a href="#adocao">Adoção responsável</a>
-        <a href="#ongs">ONGs</a>
-    </div>
-</div>
+            <div class="rodape-links">
+                <a href="#inicio">Início</a>
+                <a href="#sobre">Sobre o projeto</a>
+                <a href="#adocao">Adoção responsável</a>
+                <a href="#ongs">ONGs</a>
+            </div>
+        </div>
 
     </footer>
 </body>
@@ -286,7 +286,19 @@
             divEmail.innerHTML = "O domínio do e-mail não é válido.";
 
         } else {
-            divEmail.innerHTML = "E-mail enviado com sucesso!";
+            fetch("/contatos/cadastrar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: texto })
+            }).then(function (resposta) {
+                if (resposta.ok) {
+                    divEmail.innerHTML = `Obrigada pelo e-mail ${texto}, vou entrar em contato!`;
+                    email.value = "";
+                } else {
+                    divEmail.innerHTML = "Não foi possível enviar agora. Tente de novo.";
+                }
+            });
+
         }
     }
 </script>
