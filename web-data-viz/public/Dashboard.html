@@ -48,7 +48,7 @@
             <div class="dash-kpi">
                 <span class="dash-kpi-nome">Atenção necessária</span>
                 <span id="kpiMaisFraca" class="dash-kpi-valor"></span>
-                <span class="dash-kpi-descricao">Área com menor pontuação</span>
+                <span id="kpiMaisFracaDescricao" class="dash-kpi-descricao">Área com menor pontuação</span>
             </div>
 
             <div class="dash-kpi">
@@ -99,302 +99,316 @@
 
 </body>
 
-    <script>
+<script>
 
-        // Média dos usuários por área (%). Vem do banco, pela API
-        var mediaDosUsuarios = {}
+    // Média dos usuários por área (%). Vem do banco, pela API
+    var mediaDosUsuarios = {}
 
-        function carregarDash() {
+    function carregarDash() {
 
-            conteudoDash.style.display = "none"
-            semDados.style.display = "none"
+        conteudoDash.style.display = "none"
+        semDados.style.display = "none"
 
-            if (sessionStorage.ID_USUARIO == undefined) {
-                window.location = "TelaLogin.html"
-            } else {
-                fetch(`/resultados/${sessionStorage.ID_USUARIO}`).then(function (resposta) {
-                    if (resposta.status == 200) {
-                        resposta.json().then(function (linhas) {
-                            prepararDash(linhas)
-                        })
-                    } else {
-                        semDados.style.display = "flex"
-                    }
-                })
-            }
-        }
-
-        // Transforma o que veio do banco no formato que a dash usa
-        function prepararDash(linhas) {
-
-            const categorias = []
-            const dicas = []
-            let total = 0
-            let maximo = 0
-            let temCategoriaBaixa = false
-
-            for (let i = 0; i < linhas.length; i++) {
-                const pontos = Number(linhas[i].pontuacao)
-                const maxima = Number(linhas[i].maxima)
-                const media = Number(linhas[i].media)
-                const nome = linhas[i].categoria
-
-                total += pontos
-                maximo += maxima
-
-                categorias.push({ nome: nome, porcentagem: Math.round((pontos / maxima) * 100) })
-                mediaDosUsuarios[nome] = Math.round((media / maxima) * 100)
-
-                // mesma regra do quiz: abaixo de 60% na área é ponto de atenção
-                if (pontos / maxima < 0.6) {
-                    temCategoriaBaixa = true
-                    dicas.push({ nome: nome })
-                }
-            }
-
-            const porcentagemGeral = total / maximo
-
-            const dados = {
-                porcentagemGeral: Math.round(porcentagemGeral * 100),
-                // mesma regra do quiz: 75% no total e nenhuma área baixa
-                estaPronto: porcentagemGeral >= 0.75 && temCategoriaBaixa == false,
-                categorias: categorias,
-                dicas: dicas
-            }
-
-            semDados.style.display = "none"
-            conteudoDash.style.display = "flex"
-
-            montarStatus(dados)
-            montarKpis(dados)
-            montarGraficoGeral(dados)
-            montarGraficoCategorias(dados)
-            montarGraficoComparacao(dados)
-            montarAtencao(dados)
-        }
-
-        // Preenche os quatro indicadores
-        function montarKpis(dados) {
-
-            // Resultado geral do quiz
-            kpiPreparoGeral.innerHTML = dados.porcentagemGeral + "%"
-
-            // Área com maior e menor pontuação
-            let maisForte = dados.categorias[0]
-            let maisFraca = dados.categorias[0]
-
-            for (let i = 1; i < dados.categorias.length; i++) {
-
-                if (dados.categorias[i].porcentagem > maisForte.porcentagem) {
-                    maisForte = dados.categorias[i]
-                }
-
-                if (dados.categorias[i].porcentagem < maisFraca.porcentagem) {
-                    maisFraca = dados.categorias[i]
-                }
-            }
-
-            kpiMaisForte.innerHTML = maisForte.nome + " " + maisForte.porcentagem + "%"
-            kpiMaisFraca.innerHTML = maisFraca.nome + " " + maisFraca.porcentagem + "%"
-
-            // Comparação entre você e a média dos usuários
-            let somaMedias = 0
-
-            for (let i = 0; i < dados.categorias.length; i++) {
-                somaMedias += mediaDosUsuarios[dados.categorias[i].nome]
-            }
-
-            const mediaGeral = Math.round(somaMedias / dados.categorias.length)
-            const diferenca = dados.porcentagemGeral - mediaGeral
-
-            if (diferenca > 0) {
-                kpiVsMedia.innerHTML = "+" + diferenca + " pts"
-            } else {
-                kpiVsMedia.innerHTML = diferenca + " pts"
-            }
-        }
-
-        // Status de preparo
-        function montarStatus(dados) {
-
-            spanStatus.classList.remove("dash-status-ok", "dash-status-atencao")
-
-            if (dados.estaPronto) {
-                spanStatus.innerHTML = "Pronto para adotar"
-                spanStatus.classList.add("dash-status-ok")
-
-            } else {
-                spanStatus.innerHTML = "Ainda não está pronto"
-                spanStatus.classList.add("dash-status-atencao")
-            }
-        }
-
-        // Gráfico 1: preparo geral
-        function montarGraficoGeral(dados) {
-
-            spanPorcentagemDash.innerHTML = dados.porcentagemGeral + "%"
-
-            new Chart(graficoGeral, {
-                type: "doughnut",
-
-                data: {
-                    labels: ["Preparo", "Falta melhorar"],
-
-                    datasets: [{
-                        data: [
-                            dados.porcentagemGeral,
-                            100 - dados.porcentagemGeral
-                        ],
-                        backgroundColor: ["#974263", "#e8d5dc"],
-                        borderWidth: 0
-                    }]
-                },
-
-                options: {
-                    maintainAspectRatio: false,
-                    cutout: "70%",
-
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
+        if (sessionStorage.ID_USUARIO == undefined) {
+            window.location = "TelaLogin.html"
+        } else {
+            fetch(`/resultados/${sessionStorage.ID_USUARIO}`).then(function (resposta) {
+                if (resposta.status == 200) {
+                    resposta.json().then(function (linhas) {
+                        prepararDash(linhas)
+                    })
+                } else {
+                    semDados.style.display = "flex"
                 }
             })
         }
+    }
 
-        // Gráfico 2: preparo por categoria
-        function montarGraficoCategorias(dados) {
+    // Transforma o que veio do banco no formato que a dash usa
+    function prepararDash(linhas) {
 
-            const nomes = []
-            const valores = []
+        const categorias = []
+        const dicas = []
+        let total = 0
+        let maximo = 0
+        let temCategoriaBaixa = false
 
-            for (let i = 0; i < dados.categorias.length; i++) {
-                nomes.push(dados.categorias[i].nome)
-                valores.push(dados.categorias[i].porcentagem)
+        for (let i = 0; i < linhas.length; i++) {
+            const pontos = Number(linhas[i].pontuacao)
+            const maxima = Number(linhas[i].maxima)
+            const media = Number(linhas[i].media)
+            const nome = linhas[i].categoria
+
+            total += pontos
+            maximo += maxima
+
+            categorias.push({ nome: nome, porcentagem: Math.round((pontos / maxima) * 100) })
+            mediaDosUsuarios[nome] = Math.round((media / maxima) * 100)
+
+            // mesma regra do quiz: abaixo de 60% na área é ponto de atenção
+            if (pontos / maxima < 0.6) {
+                temCategoriaBaixa = true
+                dicas.push({ nome: nome })
             }
-
-            new Chart(graficoCategorias, {
-                type: "radar",
-
-                data: {
-                    labels: nomes,
-
-                    datasets: [{
-                        label: "Preparo (%)",
-                        data: valores,
-                        backgroundColor: "rgba(151, 66, 99, 0.25)",
-                        borderColor: "#974263",
-                        pointBackgroundColor: "#974263"
-                    }]
-                },
-
-                options: {
-                    maintainAspectRatio: false,
-
-                    scales: {
-                        r: {
-                            min: 0,
-                            max: 100,
-                            ticks: {
-                                stepSize: 25,
-                                display: false
-                            }
-                        }
-                    },
-
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            })
         }
 
-        // Gráfico 3: comparação com a média
-        function montarGraficoComparacao(dados) {
+        const porcentagemGeral = total / maximo
 
-            const nomes = []
-            const valoresVoce = []
-            const valoresMedia = []
-
-            for (let i = 0; i < dados.categorias.length; i++) {
-
-                nomes.push(dados.categorias[i].nome)
-                valoresVoce.push(dados.categorias[i].porcentagem)
-                valoresMedia.push(mediaDosUsuarios[dados.categorias[i].nome])
-            }
-
-            new Chart(graficoComparacao, {
-                type: "bar",
-
-                data: {
-                    labels: nomes,
-
-                    datasets: [
-                        {
-                            label: "Você",
-                            data: valoresVoce,
-                            backgroundColor: "#974263"
-                        },
-                        {
-                            label: "Média",
-                            data: valoresMedia,
-                            backgroundColor: "#d9a7bb"
-                        }
-                    ]
-                },
-
-                options: {
-                    maintainAspectRatio: false,
-
-                    scales: {
-                        y: {
-                            min: 0,
-                            max: 100,
-                            ticks: {
-                                stepSize: 25
-                            }
-                        },
-
-                        x: {
-                            ticks: {
-                                font: {
-                                    size: 10
-                                }
-                            }
-                        }
-                    },
-
-                    plugins: {
-                        legend: {
-                            position: "bottom"
-                        }
-                    }
-                }
-            })
+        const dados = {
+            porcentagemGeral: Math.round(porcentagemGeral * 100),
+            // mesma regra do quiz: 75% no total e nenhuma área baixa
+            estaPronto: porcentagemGeral >= 0.75 && temCategoriaBaixa == false,
+            categorias: categorias,
+            dicas: dicas
         }
 
-        // Áreas que precisam melhorar
-        function montarAtencao(dados) {
+        semDados.style.display = "none"
+        conteudoDash.style.display = "flex"
 
+        montarStatus(dados)
+        montarKpis(dados)
+        montarGraficoGeral(dados)
+        montarGraficoCategorias(dados)
+        montarGraficoComparacao(dados)
+        montarAtencao(dados)
+    }
+
+    // Preenche os quatro indicadores
+    function montarKpis(dados) {
+
+        // Resultado geral do quiz
+        kpiPreparoGeral.innerHTML = dados.porcentagemGeral + "%"
+
+        // Área com maior e menor pontuação
+        let maisForte = dados.categorias[0]
+        let maisFraca = dados.categorias[0]
+
+        for (let i = 1; i < dados.categorias.length; i++) {
+
+            if (dados.categorias[i].porcentagem > maisForte.porcentagem) {
+                maisForte = dados.categorias[i]
+            }
+
+            if (dados.categorias[i].porcentagem < maisFraca.porcentagem) {
+                maisFraca = dados.categorias[i]
+            }
+        }
+
+                   // Área de destaque: se todas empatam, não existe uma só
+            if (maisForte.porcentagem == maisFraca.porcentagem) {
+                kpiMaisForte.innerHTML = "Todas " + maisForte.porcentagem + "%"
+            } else {
+                kpiMaisForte.innerHTML = maisForte.nome + " " + maisForte.porcentagem + "%"
+            }
+
+            // Atenção necessária: só mostra uma área se alguma estiver baixa
             if (dados.dicas.length == 0) {
-
-                dashAtencao.innerHTML =
-                    "<span class='dash-etiqueta dash-etiqueta-ok'>Todas as áreas estão boas</span>"
-
+                kpiMaisFraca.innerHTML = "Tudo certo ✓"
+                kpiMaisFracaDescricao.innerHTML = "Nenhuma área precisa melhorar"
             } else {
-
-                let html = "<span class='dash-atencao-texto'>Melhorar:</span>"
-
-                for (let i = 0; i < dados.dicas.length; i++) {
-                    html += "<span class='dash-etiqueta'>" + dados.dicas[i].nome + "</span>"
-                }
-
-                dashAtencao.innerHTML = html
+                kpiMaisFraca.innerHTML = maisFraca.nome + " " + maisFraca.porcentagem + "%"
+                kpiMaisFracaDescricao.innerHTML = "Área com menor pontuação"
             }
+
+        // Comparação entre você e a média dos usuários
+        let somaMedias = 0
+
+        for (let i = 0; i < dados.categorias.length; i++) {
+            somaMedias += mediaDosUsuarios[dados.categorias[i].nome]
         }
 
-    </script>
+        const mediaGeral = Math.round(somaMedias / dados.categorias.length)
+        const diferenca = dados.porcentagemGeral - mediaGeral
+
+        if (diferenca > 0) {
+            kpiVsMedia.innerHTML = "+" + diferenca + " pts"
+        } else {
+            kpiVsMedia.innerHTML = diferenca + " pts"
+        }
+    }
+
+    // Status de preparo
+    function montarStatus(dados) {
+
+        spanStatus.classList.remove("dash-status-ok", "dash-status-atencao")
+
+        if (dados.estaPronto) {
+            spanStatus.innerHTML = "Pronto para adotar"
+            spanStatus.classList.add("dash-status-ok")
+
+        } else {
+            spanStatus.innerHTML = "Ainda não está pronto"
+            spanStatus.classList.add("dash-status-atencao")
+        }
+    }
+
+    // Gráfico 1: preparo geral
+    function montarGraficoGeral(dados) {
+
+        spanPorcentagemDash.innerHTML = dados.porcentagemGeral + "%"
+
+        new Chart(graficoGeral, {
+            type: "doughnut",
+
+            data: {
+                labels: ["Preparo", "Falta melhorar"],
+
+                datasets: [{
+                    data: [
+                        dados.porcentagemGeral,
+                        100 - dados.porcentagemGeral
+                    ],
+                    backgroundColor: ["#974263", "#e8d5dc"],
+                    borderWidth: 0
+                }]
+            },
+
+            options: {
+                maintainAspectRatio: false,
+                cutout: "70%",
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        })
+    }
+
+    // Gráfico 2: preparo por categoria
+    function montarGraficoCategorias(dados) {
+
+        const nomes = []
+        const valores = []
+
+        for (let i = 0; i < dados.categorias.length; i++) {
+            nomes.push(dados.categorias[i].nome)
+            valores.push(dados.categorias[i].porcentagem)
+        }
+
+        new Chart(graficoCategorias, {
+            type: "radar",
+
+            data: {
+                labels: nomes,
+
+                datasets: [{
+                    label: "Preparo (%)",
+                    data: valores,
+                    backgroundColor: "rgba(151, 66, 99, 0.25)",
+                    borderColor: "#974263",
+                    pointBackgroundColor: "#974263"
+                }]
+            },
+
+            options: {
+                maintainAspectRatio: false,
+
+                scales: {
+                    r: {
+                        min: 0,
+                        max: 100,
+                        ticks: {
+                            stepSize: 25,
+                            display: false
+                        }
+                    }
+                },
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        })
+    }
+
+    // Gráfico 3: comparação com a média
+    function montarGraficoComparacao(dados) {
+
+        const nomes = []
+        const valoresVoce = []
+        const valoresMedia = []
+
+        for (let i = 0; i < dados.categorias.length; i++) {
+
+            nomes.push(dados.categorias[i].nome)
+            valoresVoce.push(dados.categorias[i].porcentagem)
+            valoresMedia.push(mediaDosUsuarios[dados.categorias[i].nome])
+        }
+
+        new Chart(graficoComparacao, {
+            type: "bar",
+
+            data: {
+                labels: nomes,
+
+                datasets: [
+                    {
+                        label: "Você",
+                        data: valoresVoce,
+                        backgroundColor: "#974263"
+                    },
+                    {
+                        label: "Média",
+                        data: valoresMedia,
+                        backgroundColor: "#d9a7bb"
+                    }
+                ]
+            },
+
+            options: {
+                maintainAspectRatio: false,
+
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 100,
+                        ticks: {
+                            stepSize: 25
+                        }
+                    },
+
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 10
+                            }
+                        }
+                    }
+                },
+
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    }
+                }
+            }
+        })
+    }
+
+    // Áreas que precisam melhorar
+    function montarAtencao(dados) {
+
+        if (dados.dicas.length == 0) {
+
+            dashAtencao.innerHTML =
+                "<span class='dash-etiqueta dash-etiqueta-ok'>Todas as áreas estão boas</span>"
+
+        } else {
+
+            let html = "<span class='dash-atencao-texto'>Melhorar:</span>"
+
+            for (let i = 0; i < dados.dicas.length; i++) {
+                html += "<span class='dash-etiqueta'>" + dados.dicas[i].nome + "</span>"
+            }
+
+            dashAtencao.innerHTML = html
+        }
+    }
+
+</script>
+
 </html>
