@@ -18,11 +18,11 @@ var app = express();
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var resultadosRouter = require("./src/routes/resultados");
-var animaisRouter = require("./src/routes/animais");
-var interessesRouter = require("./src/routes/interesses");
-var historiasRouter = require("./src/routes/historias");
-var quizRouter = require("./src/routes/quiz");
-
+var animaisRouter = require("./src/routes/Animais");
+var interessesRouter = require("./src/routes/Interesses");
+var historiasRouter = require("./src/routes/Historias");
+var quizRouter = require("./src/routes/Quiz");
+var contatosRouter = require("./src/routes/contatos");
 
 
 app.use(express.json());
@@ -38,6 +38,7 @@ app.use("/animais", animaisRouter);
 app.use("/interesses", interessesRouter);
 app.use("/historias", historiasRouter);
 app.use("/quiz", quizRouter);
+app.use("/contatos", contatosRouter);
 
 
 app.listen(PORTA_APP, function () {
