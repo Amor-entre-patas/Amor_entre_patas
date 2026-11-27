@@ -62,12 +62,17 @@ function cadastrar(req, res) {
                 function (erro) {
                     console.log(erro);
                     console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
-                    res.status(500).json(erro.sqlMessage);
+
+                    // 1062 = valor repetido numa coluna única (o CPF)
+                    if (erro.errno == 1062) {
+                        res.status(409).send("");
+                    } else {
+                        res.status(500).json(erro.sqlMessage);
+                    }
                 }
             );
     }
 }
-
 module.exports = {
     autenticar,
     cadastrar
