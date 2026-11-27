@@ -5,9 +5,15 @@ create table Usuario (
 id_usuario int primary key auto_increment,
 nome varchar(45),
 email varchar(45),
-cpf char(11),
+cpf char(11) unique,
 senha_hash varchar(255),
 dt_cadastro date
+);
+
+create table Contato (
+id_contato int primary key auto_increment,
+email varchar(45),
+dt_contato date
 );
 
 create table Ong(
@@ -43,9 +49,7 @@ id_resultado_quiz int primary key auto_increment,
 dt_realizacao date,
 classificacao varchar (50),
 fk_usuario int,
-fk_quiz int,
-constraint ckFkUsuarios foreign key(fk_usuario) references Usuario(id_usuario),
-constraint ckFkQuiiz foreign key (fk_quiz) references Quiz(id_quiz)
+constraint ckFkUsuarios foreign key(fk_usuario) references Usuario(id_usuario)
 );
 
 create table Animal (
@@ -173,22 +177,23 @@ insert into Alternativa (texto_alternativa, pontuacao_alternativa, fk_quiz) valu
 
 -- ANIMAIS
 INSERT INTO Animal (nome, especie, dt_nasc, fk_ong) VALUES
-('Azevinho', 'Cachorro', '2026-07-21', 1),
+('Holly', 'Cachorro', '2026-07-21', 1),
 ('Hantu', 'Gato', '2025-02-11', 2),
 ('Bôrbí', 'Cachorro', '2023-05-30', 1);
 
+
 insert into Usuario (nome, email, cpf, senha_hash, dt_cadastro) values 
-('Gabriela', 'Gabriela@email', '12345678901', sha1('ZeusFofo12'), '2026-11-24'),
-('Marina', 'Marina@email', '12345678987', sha1('AmoraLinda04'), '2026-1-4'),
-('Júlia', 'Júlia@email', '12345678956', sha1('Lunacutepie56'), '2026-7-13'),
-('Kaique', 'Kaique@email', '12345678923', sha1('PirilampoPapagaio'), '2026-3-2');
+('Gabriela', 'Gabriela@email.com', '12345678901', sha1('ZeusFofo12'), '2026-11-24'),
+('Marina', 'Marina@email.com', '12345678987', sha1('AmoraLinda04'), '2026-1-4'),
+('Júlia', 'Júlia@email.com', '12345678956', sha1('Lunacutepie56'), '2026-7-13'),
+('Kaique', 'Kaique@email.com', '12345678923', sha1('PirilampoPapagaio'), '2026-3-2');
 
 
 insert into Statuss (email, atualmente, fk_usuario) values 
-('Gabriela@email', 'Aprovado', 1),
-('Marina@email', 'Aprovado', 2),
-('Júlia@email', 'Aprovado', 3),
-('Kaique@email', 'Aprovado', 4);
+('Gabriela@email.com', 'Aprovado', 1),
+('Marina@email.com', 'Aprovado', 2),
+('Júlia@email.com', 'Aprovado', 3),
+('Kaique@email.com', 'Aprovado', 4);
 
 
 INSERT INTO Historias (historia, fk_statuss, fk_usuario) VALUES
@@ -269,3 +274,5 @@ SELECT
          FROM Pontuacao
          GROUP BY fk_resultado_quiz
      ) AS resultados) AS diferenca;
+
+
