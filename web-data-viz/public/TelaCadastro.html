@@ -50,9 +50,9 @@
     <div class="conteiner">
         <div class="formulario">
 
-            <div class="campo-cpf">
-                <div class="rotulo-cpf"> Cpf:</div>
-                <input class="campos" placeholder="Insira seu cpf" id="ipt_cpf"> <br>
+             <div class="campo-cpf">
+                <div class="rotulo-cpf"> Nome:</div>
+                <input class="campos" placeholder="Insira seu nome" id="ipt_nome"> <br>
             </div> <br>
 
 
@@ -62,8 +62,8 @@
             </div>
 
             <div class="campo">
-                <div class="rotulo">Nome:</div>
-                <input class="campos" placeholder="Insira seu nome" id="ipt_nome">
+                <div class="rotulo">Cpf:</div>
+                <input class="campos" placeholder="Insira seu cpf" id="ipt_cpf">
             </div>
 
             <div class="campo">
@@ -148,10 +148,9 @@ function cadastrar() {
         })
     }).then(function (resposta) {
         if (resposta.ok) {
-            resposta.json().then(function (json) {
-                sessionStorage.ID_USUARIO = json.insertId;
-                window.location = "Quiz.html";
-            });
+            window.location = "TelaLogin.html";
+        } else if (resposta.status == 409) {
+            div_exibir.innerHTML = "";
         } else {
             div_exibir.innerHTML = "Não foi possível fazer o cadastro.";
         }
